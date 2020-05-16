@@ -46,6 +46,8 @@
         <module>tlc-io-cims</module>
         <module>tlc-io-x937-utils</module>
         <module>tlc-io-x937</module>
+        <module>tlc-io-ach</module>
+        <module>tlc-io-ach-utils</module>
     </modules>
     <repositories>
         <repository>
