@@ -274,7 +274,7 @@
                 name="ReturnReason" />
             <classField number="10" offset="40" length="15" type="S"
                 name="UserField" />
-            <classField number="11" offset="55" length="15" type="S"
+            <classField number="11" offset="55" length="25" type="S"
                 name="Reserved" />
         </classDefinition>
         <classDefinition recordType="31" type="TYPE_RETURN"
