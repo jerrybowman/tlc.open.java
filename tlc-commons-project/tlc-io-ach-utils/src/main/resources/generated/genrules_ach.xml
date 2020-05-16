@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x937GenRules>
+    <interfaceDefinitionList>
+        <interfaceDefinition recordType="01" type="TYPE_FILE_HEADER" name="AchFileHeaderRecord">
+            <interfaceField type="S" name="RecordType" setter="public"/>
+            <interfaceField type="S" name="PriorityCode" setter="public"/>
+            <interfaceField type="S" name="ImmediateDestination" setter="public"/>
+            <interfaceField type="S" name="ImmediateOrigin" setter="public"/>
+            <interfaceField type="D" name="FileCreationDate" setter="public"/>
+            <interfaceField type="T" name="FileCreationTime" setter="public"/>
+            <interfaceField type="S" name="FileIDModifier" setter="public"/>
+            <interfaceField type="S" name="RecordSize" setter="public"/>
+            <interfaceField type="S" name="BlockingFactor" setter="public"/>
+            <interfaceField type="S" name="FormatCode" setter="public"/>
+            <interfaceField type="S" name="Destination" setter="public"/>
+            <interfaceField type="S" name="CompanyName" setter="public"/>
+            <interfaceField type="S" name="ReferenceCode" setter="public"/>
+        </interfaceDefinition>
+        <interfaceDefinition recordType="02" type="TYPE_BATCH_HEADER" name="AchBatchHeaderRecord">
+            <interfaceField type="S" name="RecordTypeCode" setter="public"/>
+            <interfaceField type="S" name="ServiceClassCode" setter="public"/>
+            <interfaceField type="S" name="CompanyName" setter="public"/>
+            <interfaceField type="S" name="CompanyDiscretionaryData" setter="public"/>
+            <interfaceField type="S" name="CompanyIdentification" setter="public"/>
+            <interfaceField type="S" name="StandardEntryClassCode" setter="public"/>
+            <interfaceField type="S" name="CompanyEntryDescription" setter="public"/>
+            <interfaceField type="D" name="CompanyDescriptiveDate" setter="public"/>
+            <interfaceField type="D" name="EffectiveEntryDate" setter="public"/>
+            <interfaceField type="S" name="SettlementDate" setter="public"/>
+            <interfaceField type="S" name="OriginatorStatusCode" setter="public"/>
+            <interfaceField type="S" name="OriginatingDfiIdentification" setter="public"/>
+            <interfaceField type="N" name="BatchNumber" setter="public"/>
+        </interfaceDefinition>
+    </interfaceDefinitionList>
+</x937GenRules>

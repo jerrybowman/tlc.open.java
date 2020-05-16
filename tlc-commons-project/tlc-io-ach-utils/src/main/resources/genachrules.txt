@@ -1,0 +1,31 @@
+C AchFileHeaderRecord 01 13 TYPE FILE HEADER
+F 1 RecordType M 01 01 1 S
+F 2 PriorityCode M 02 03 2 S
+F 3 ImmediateDestination M 04 13 10 S
+F 4 ImmediateOrigin M 14 23 10 S
+F 5 FileCreationDate M 24 29 6 D
+F 6 FileCreationTime C 30 33 4 T
+F 7 FileIDModifier M 34 34 1 S
+F 8 RecordSize M 35 37 3 S
+F 9 BlockingFactor M 38 39 2 S
+F 10 FormatCode M 40 40 1 S
+F 11 Destination M 41 63 23 S
+F 12 CompanyName M 64 86 23 S
+F 13 ReferenceCode C 87 94 8 S
+
+C AchBatchHeaderRecord 02 13 TYPE BATCH HEADER
+F 1 RecordTypeCode M 01 01 1 S
+F 2 ServiceClassCode M 02 04 3 S
+F 3 CompanyName M 05 20 16 S
+F 4 CompanyDiscretionaryData O 21 40 20 S
+F 5 CompanyIdentification M 41 50 10 S
+F 6 StandardEntryClassCode M 51 53 3 S
+F 7 CompanyEntryDescription M 54 63 10 S
+F 8 CompanyDescriptiveDate O 64 69 6 D
+F 9 EffectiveEntryDate R 70 75 6 D
+F 10 SettlementDate R 76 78 3 S
+F 11 OriginatorStatusCode M 79 79 1 S
+F 12 OriginatingDfiIdentification M 80 87 8 S
+F 13 BatchNumber M 88 94 7 N
+
+

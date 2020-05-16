@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x937GenRules>
+    <classDefinitionList standard="01" package="null.impl">
+        <classDefinition recordType="1" name="AchFileHeaderRecord">
+            <classField number="1" offset="0" length="1" type="S" name="RecordType" setter="public"/>
+            <classField number="2" offset="1" length="2" type="S" name="PriorityCode" setter="public"/>
+            <classField number="3" offset="3" length="10" type="S" name="ImmediateDestination" setter="public"/>
+            <classField number="4" offset="13" length="10" type="S" name="ImmediateOrigin" setter="public"/>
+            <classField number="5" offset="23" length="6" type="D" name="FileCreationDate" setter="public"/>
+            <classField number="6" offset="29" length="4" type="T" name="FileCreationTime" setter="public"/>
+            <classField number="7" offset="33" length="1" type="S" name="FileIDModifier" setter="public"/>
+            <classField number="8" offset="34" length="3" type="S" name="RecordSize" setter="public"/>
+            <classField number="9" offset="37" length="2" type="S" name="BlockingFactor" setter="public"/>
+            <classField number="10" offset="39" length="1" type="S" name="FormatCode" setter="public"/>
+            <classField number="11" offset="40" length="23" type="S" name="Destination" setter="public"/>
+            <classField number="12" offset="63" length="23" type="S" name="CompanyName" setter="public"/>
+            <classField number="13" offset="86" length="8" type="S" name="ReferenceCode" setter="public"/>
+        </classDefinition>
+        <classDefinition recordType="2" name="AchBatchHeaderRecord">
+            <classField number="1" offset="0" length="1" type="S" name="RecordTypeCode" setter="public"/>
+            <classField number="2" offset="1" length="3" type="S" name="ServiceClassCode" setter="public"/>
+            <classField number="3" offset="4" length="16" type="S" name="CompanyName" setter="public"/>
+            <classField number="4" offset="20" length="20" type="S" name="CompanyDiscretionaryData" setter="public"/>
+            <classField number="5" offset="40" length="10" type="S" name="CompanyIdentification" setter="public"/>
+            <classField number="6" offset="50" length="3" type="S" name="StandardEntryClassCode" setter="public"/>
+            <classField number="7" offset="53" length="10" type="S" name="CompanyEntryDescription" setter="public"/>
+            <classField number="8" offset="63" length="6" type="D" name="CompanyDescriptiveDate" setter="public"/>
+            <classField number="9" offset="69" length="6" type="D" name="EffectiveEntryDate" setter="public"/>
+            <classField number="10" offset="75" length="3" type="S" name="SettlementDate" setter="public"/>
+            <classField number="11" offset="78" length="1" type="S" name="OriginatorStatusCode" setter="public"/>
+            <classField number="12" offset="79" length="8" type="S" name="OriginatingDfiIdentification"
+                        setter="public"/>
+            <classField number="13" offset="87" length="7" type="N" name="BatchNumber" setter="public"/>
+        </classDefinition>
+    </classDefinitionList>
+</x937GenRules>
