@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
+/*
+ * ******************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ******************************************************************************
+ */
 
 package com.thelastcheck.io.x937.records.std2001;
 
@@ -29,8 +31,8 @@ import com.thelastcheck.io.x937.records.base.X937CheckDetailRecordBase;
 
 public class X937CheckDetailRecordImpl extends X937CheckDetailRecordBase {
 
-    private static int maxFieldNumber = 16;
-    private static Field fields[] = new Field[maxFieldNumber+1];
+    private static final int maxFieldNumber = 16;
+    private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
@@ -51,11 +53,6 @@ public class X937CheckDetailRecordImpl extends X937CheckDetailRecordBase {
         fields[15] = new Field("UserField", 15, 78, 1, FieldType.STRING);
         fields[16] = new Field("Reserved", 16, 79, 1, FieldType.STRING);
     }
-
-
-    /*
-     * X937CheckDetailRecordImpl
-     */
 
     public X937CheckDetailRecordImpl() {
         super();
@@ -89,7 +86,6 @@ public class X937CheckDetailRecordImpl extends X937CheckDetailRecordBase {
         }
         return fields[fieldNumber];
     }
-
 
     public String auxiliaryOnUs() {
         return getFieldAsString(field(2));
@@ -163,8 +159,7 @@ public class X937CheckDetailRecordImpl extends X937CheckDetailRecordBase {
         return this;
     }
 
-    public long itemAmountAsLong()
-        throws InvalidDataException {
+    public long itemAmountAsLong() throws InvalidDataException {
         return getFieldAsLong(field(7));
     }
 
@@ -227,8 +222,7 @@ public class X937CheckDetailRecordImpl extends X937CheckDetailRecordBase {
         return this;
     }
 
-    public int checkDetailRecordAddendumCountAsInt()
-        throws InvalidDataException {
+    public int checkDetailRecordAddendumCountAsInt() throws InvalidDataException {
         return getFieldAsInt(field(13));
     }
 

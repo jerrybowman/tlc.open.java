@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.x937.generator;
 
@@ -25,7 +27,9 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.time.LocalDate;
 
+import org.apache.commons.lang3.StringUtils;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
 import org.slf4j.Logger;
@@ -48,8 +52,11 @@ import com.thelastcheck.x937.xml.X937GenRulesItem;
 
 public class GenerateX937Classes {
 
-    private static Logger log = LoggerFactory
-            .getLogger(GenerateX937Classes.class);
+    private static final char PACKAGE_SEPARATOR = '.';
+    private static final String PACKAGE_STANDARD_PREFIX = ".std";
+    private static final String BASE_PACKAGE_NAME = ".base";
+    private static final String PRIVATE = "private";
+    private static final Logger log = LoggerFactory.getLogger(GenerateX937Classes.class);
     private String currentClassName = null;
     private int currentFieldMax = 0;
     private String rulesFile = null;
@@ -64,10 +71,8 @@ public class GenerateX937Classes {
     private boolean generatingInterfaces = false;
     private String packageNameInterface;
 
-    /*
-     * C,X937CheckDetailRecordImpl F,AuxiliaryOn-Us,C,03,17,15,NBSM
-     * F,ExternalProcessingCode,C,18,18,1,ANS
-     */
+    private final LocalDate copyrightDate = LocalDate.now();
+    private final String copyrightYear = "" + copyrightDate.getYear();
 
     public static void main(String[] args) {
         GenerateX937Classes generator = new GenerateX937Classes();
@@ -91,30 +96,16 @@ public class GenerateX937Classes {
             }
         }
         if (rulesFile == null) {
-            rulesFile = "./src/test/resources/rules.txt";
+            rulesFile = "./src/main/resources/genrules_x937-dstu.xml";
         }
         if (sourceLocation == null) {
-            sourceLocation = "./";
-        }
-        if (packageName == null) {
-            packageName = "test";
+            sourceLocation = "./target/generated";
         }
 
-        X937GenRules genRules = null;
-        try {
-            Reader reader = new FileReader(rulesFile);
+        X937GenRules genRules;
+        try (Reader reader = new FileReader(rulesFile)) {
             genRules = X937GenRules.unmarshal(reader);
-            reader.close();
-        } catch (MarshalException e) {
-            e.printStackTrace();
-            return;
-        } catch (ValidationException e) {
-            e.printStackTrace();
-            return;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
+        } catch (MarshalException | ValidationException | IOException e) {
             e.printStackTrace();
             return;
         }
@@ -138,8 +129,8 @@ public class GenerateX937Classes {
 
     private void processClassImplList(ClassDefinitionList list) {
         packageNameInterface = list.getPackage();
-        packageName = packageNameInterface + ".std" + list.getStandard();
-        String packagePath = packageName.replace('.', '/');
+        packageName = packageNameInterface + PACKAGE_STANDARD_PREFIX + list.getStandard();
+        String packagePath = packageName.replace(PACKAGE_SEPARATOR, File.separatorChar);
         packageFile = new File(sourceLocation, packagePath);
         packageFile.mkdirs();
         ClassDefinitionListItem[] items = list.getClassDefinitionListItem();
@@ -160,7 +151,7 @@ public class GenerateX937Classes {
     private void processInterfaceList(InterfaceDefinitionList list) {
         packageNameInterface = list.getPackage();
         packageName = list.getPackage();
-        String packagePath = packageName.replace('.', '/');
+        String packagePath = packageName.replace(PACKAGE_SEPARATOR, File.separatorChar);
         packageFile = new File(sourceLocation, packagePath);
         packageFile.mkdirs();
 
@@ -170,8 +161,7 @@ public class GenerateX937Classes {
             InterfaceDefinition classDef = item.getInterfaceDefinition();
             generateClassInterface(classDef);
             String interfaceName = classDef.getName();
-            InterfaceDefinitionItem[] classDefItemList = classDef
-                    .getInterfaceDefinitionItem();
+            InterfaceDefinitionItem[] classDefItemList = classDef.getInterfaceDefinitionItem();
             for (InterfaceDefinitionItem classDefItem : classDefItemList) {
                 InterfaceField classField = classDefItem.getInterfaceField();
                 generateFieldInterface(interfaceName, classField);
@@ -182,8 +172,8 @@ public class GenerateX937Classes {
 
     private void processClassBaseList(InterfaceDefinitionList list) {
         packageNameInterface = list.getPackage();
-        packageName = list.getPackage() + ".base";
-        String packagePath = packageName.replace('.', '/');
+        packageName = list.getPackage() + BASE_PACKAGE_NAME;
+        String packagePath = packageName.replace(PACKAGE_SEPARATOR, File.separatorChar);
         packageFile = new File(sourceLocation, packagePath);
         packageFile.mkdirs();
 
@@ -205,11 +195,16 @@ public class GenerateX937Classes {
 
     private void generateFieldImpl(String interfaceName, ClassField classField) {
         int fieldNumber = classField.getNumber();
+        // skip field one - in base X9.37Record class.
+        if (fieldNumber == 1) {
+            return;
+        }
+
         String fieldName = classField.getName();
         int fieldStart = classField.getOffset();
         int fieldLength = classField.getLength();
         boolean dynamicField = classField.getFieldDynamic();
-        boolean setterPrivate = classField.getSetter().equals("private");
+        boolean setterPrivate = classField.getSetter().equals(PRIVATE);
         String setterCode = null;
         if (classField.getClassFieldItemCount() > 0) {
             ClassFieldItem cfi = classField.getClassFieldItem(0);
@@ -221,42 +216,34 @@ public class GenerateX937Classes {
         // For now we will default field type to string.
         // String fieldType = fieldArgs[7];
         String fieldType = null;
-        if (classField.getType().length() > 0) {
+        if (StringUtils.isNotEmpty(classField.getType())) {
             fieldType = classField.getType();
         }
 
-        // skip field one - in base X9.37Record class.
-        if (fieldNumber == 1) {
-            return;
-        }
-
-        // make it relative to 0.
-        // fieldStart--;
-        FieldType fieldTypeValue = null;
+        FieldType fieldTypeValue;
 
         String fieldNameOriginal = fieldName;
 
         // make the first character lower case, but only if the second character
         // is already lower case. This allows for names beginning with an
         // acronym to not be changed.
-        if (Character.isLowerCase(fieldName.charAt(1))) {
-            fieldName = fieldName.substring(0, 1).toLowerCase()
-                        + fieldName.substring(1);
+        if (fieldName.length() > 1 && Character.isLowerCase(fieldName.charAt(1))) {
+            fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
         }
 
-        if (fieldType != null && fieldType.length() > 0) {
+        if (StringUtils.isNotEmpty(fieldType)) {
             fieldTypeValue = calculateFieldType(fieldType, fieldLength);
         } else {
             fieldTypeValue = FieldType.STRING;
         }
         if (dynamicField) {
             classWriterTop.println("        fields[" + fieldNumber
-                                   + "] = null;");
+                    + "] = null;");
         } else {
             classWriterTop.println("        fields[" + fieldNumber + "] = "
-                                   + "new Field(\"" + fieldNameOriginal + "\", " + fieldNumber
-                                   + ", " + fieldStart + ", " + fieldLength + ", FieldType."
-                                   + fieldTypeValue + ");");
+                    + "new Field(\"" + fieldNameOriginal + "\", " + fieldNumber
+                    + ", " + fieldStart + ", " + fieldLength + ", FieldType."
+                    + fieldTypeValue + ");");
         }
         switch (fieldTypeValue) {
             case STRING:
@@ -265,33 +252,33 @@ public class GenerateX937Classes {
             case INT:
                 stringMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
                 classWriterMain.println();
-                intMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                intMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 break;
             case LONG:
                 stringMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
                 classWriterMain.println();
-                longMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                longMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 break;
             case BINARY:
-                binaryMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                binaryMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 break;
             case ROUTING_NUMBER:
-                routingNumberMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                routingNumberMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 classWriterMain.println();
                 stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
                 break;
             case ONUS:
-                onUsMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                onUsMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 classWriterMain.println();
                 stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
                 break;
             case DATE:
-                dateMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                dateMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 classWriterMain.println();
                 stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
                 break;
             case TIME:
-                timeMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                timeMethods(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode);
                 classWriterMain.println();
                 stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
                 break;
@@ -305,17 +292,16 @@ public class GenerateX937Classes {
         // For now we will default field type to string.
         // String fieldType = fieldArgs[7];
         String fieldType = null;
-        if (classField.getType().length() > 0) {
+        if (StringUtils.isNotEmpty(classField.getType())) {
             fieldType = classField.getType();
         }
 
         boolean setterPrivate = false;
         String setterType = classField.getSetter();
-        if (setterType != null && setterType.equalsIgnoreCase("private")) {
+        if (setterType != null && setterType.equalsIgnoreCase(PRIVATE)) {
             setterPrivate = true;
         }
-        createFieldMethods(interfaceName, 0, fieldName, 1, fieldLength, fieldType,
-                setterPrivate, null);
+        createBaseFieldMethods(interfaceName, fieldName, fieldLength, fieldType, setterPrivate);
     }
 
     private void generateFieldInterface(String interfaceName, InterfaceField classField) {
@@ -324,54 +310,36 @@ public class GenerateX937Classes {
         // For now we will default field type to string.
         // String fieldType = fieldArgs[7];
         String fieldType = null;
-        if (classField.getType().length() > 0) {
+        if (StringUtils.isNotBlank(classField.getType())) {
             fieldType = classField.getType();
         }
 
         boolean setterPrivate = false;
         String setterType = classField.getSetter();
-        if (setterType != null && setterType.equalsIgnoreCase("private")) {
+        if (setterType != null && setterType.equalsIgnoreCase(PRIVATE)) {
             setterPrivate = true;
         }
-        createFieldMethods(interfaceName, 0, fieldName, 1, fieldLength, fieldType,
-                setterPrivate, null);
+        createBaseFieldMethods(interfaceName, fieldName, fieldLength, fieldType, setterPrivate);
     }
 
-    /**
-     * @param fieldNumber
-     * @param fieldName
-     * @param fieldStart
-     * @param fieldLength
-     * @param fieldType
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
-    private void createFieldMethods(String interfaceName, int fieldNumber, String fieldName,
-            int fieldStart, int fieldLength, String fieldType,
-            boolean setterPrivate, String setterCode) {
+    private void createBaseFieldMethods(String interfaceName, String fieldName,
+                                        int fieldLength, String fieldType,
+                                        boolean setterPrivate) {
         // skip field one - in base X9.37Record class.
-        if (fieldNumber == 1) {
-            return;
-        }
         if (fieldName.equals("RecordType")) {
             return;
         }
 
-        // make it relative to 0.
-        fieldStart--;
-        FieldType fieldTypeValue = null;
-
-        String fieldNameOriginal = fieldName;
+        FieldType fieldTypeValue;
 
         // make the first character lower case, but only if the second character
         // is already lower case. This allows for names beginning with an
         // acronym to not be changed.
-        if (Character.isLowerCase(fieldName.charAt(1))) {
-            fieldName = fieldName.substring(0, 1).toLowerCase()
-                        + fieldName.substring(1);
+        if (fieldName.length() > 1 && Character.isLowerCase(fieldName.charAt(1))) {
+            fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
         }
 
-        if (fieldType != null && fieldType.length() > 0) {
+        if (StringUtils.isNotBlank(fieldType)) {
             fieldTypeValue = calculateFieldType(fieldType, fieldLength);
         } else {
             fieldTypeValue = FieldType.STRING;
@@ -379,130 +347,108 @@ public class GenerateX937Classes {
 
         switch (fieldTypeValue) {
             case STRING:
-                stringMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, false, setterPrivate, null);
                 break;
             case INT:
-                stringMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, false, setterPrivate, null);
                 classWriterMain.println();
-                intMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                intMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 break;
             case LONG:
-                stringMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, false, setterPrivate, null);
                 classWriterMain.println();
-                longMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                longMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 break;
             case BINARY:
-                binaryMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                binaryMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 break;
             case ROUTING_NUMBER:
-                routingNumberMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                routingNumberMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 classWriterMain.println();
-                stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, true, setterPrivate, null);
                 break;
             case ONUS:
-                onUsMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                onUsMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 classWriterMain.println();
-                stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, true, setterPrivate, null);
                 break;
             case DATE:
-                dateMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                dateMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 classWriterMain.println();
-                stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, true, setterPrivate, null);
                 break;
             case TIME:
-                timeMethods(interfaceName, fieldNumber, fieldName, false, setterPrivate, setterCode);
+                timeMethods(interfaceName, 0, fieldName, setterPrivate, null);
                 classWriterMain.println();
-                stringMethods(interfaceName, fieldNumber, fieldName, true, setterPrivate, setterCode);
+                stringMethods(interfaceName, 0, fieldName, true, setterPrivate, null);
                 break;
         }
         classWriterMain.println();
     }
 
-    /**
-     * @param fieldNumber TODO
-     * @param fieldName
-     * @param setterPrivate TODO
-     * @param setterText TODO
-     */
     private void stringMethods(String interfaceName, int fieldNumber, String fieldName,
-            boolean asString, boolean setterPrivate, String setterCode) {
+                               boolean asString, boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
             if (asString) {
-                classWriterMain.println("    String " + fieldName
-                                        + "AsString();");
+                classWriterMain.println("    String " + fieldName + "AsString();");
             } else {
-                classWriterMain.println("    String " + fieldName
-                                        + "();");
+                classWriterMain.println("    String " + fieldName + "();");
             }
         } else {
             if (asString) {
-                classWriterMain.println("    public String " + fieldName
-                                        + "AsString() {");
+                classWriterMain.println("    public String " + fieldName + "AsString() {");
             } else {
-                classWriterMain.println("    public String " + fieldName
-                                        + "() {");
+                classWriterMain.println("    public String " + fieldName + "() {");
             }
             if (generatingBaseClasses) {
                 classWriterMain
                         .println("        throw new InvalidStandardLevelException();");
             } else {
                 classWriterMain
-                        .println("        return getFieldAsString(field("
-                                 + fieldNumber + "));");
+                        .println("        return getFieldAsString(field(" + fieldNumber + "));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "String";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldNumber
-     * @param fieldName
-     * @param setterPrivate
-     * @param setterCode
-     * @param dataType
-     */
     private void setterMethod(String interfaceName, int fieldNumber, String fieldName,
-            boolean setterPrivate, String setterCode, String dataType) {
+                              boolean setterPrivate, String setterCode, String dataType) {
         if (generatingInterfaces && !setterPrivate) {
             classWriterMain.println("    " +
-                                    interfaceName +
-                                    " " + fieldName + "("
-                                    + (dataType.equals("Time") ? "Date" : dataType)
-                                    + " value);");
+                    interfaceName +
+                    " " + fieldName + "("
+                    + (dataType.equals("Time") ? "Date" : dataType)
+                    + " value);");
         }
         if (generatingBaseClasses && !setterPrivate) {
             classWriterMain.println("    public " +
-                                    interfaceName +
-                                    " " + fieldName + "("
-                                    + (dataType.equals("Time") ? "Date" : dataType)
-                                    + " value) {");
+                    interfaceName +
+                    " " + fieldName + "("
+                    + (dataType.equals("Time") ? "Date" : dataType)
+                    + " value) {");
             classWriterMain
                     .println("        throw new InvalidStandardLevelException();");
             classWriterMain.println("    }");
         }
         if (!generatingBaseClasses && !generatingInterfaces) {
             classWriterMain.print("    "
-                                  + (setterPrivate ? "private" : "public"));
+                    + (setterPrivate ? "private" : "public"));
             classWriterMain.println(" " +
-                                    interfaceName +
-                                    " " + fieldName + "("
-                                    + (dataType.equals("Time") ? "Date" : dataType)
-                                    + " value) {");
+                    interfaceName +
+                    " " + fieldName + "("
+                    + (dataType.equals("Time") ? "Date" : dataType)
+                    + " value) {");
             if (setterCode == null) {
                 classWriterMain.print("        setField");
                 if (dataType.equals("Date")) {
-                    classWriterMain.print("Date(value, field(" + fieldNumber
-                                          + "), x9TimeZone);");
+                    classWriterMain.println("Date(value, field(" + fieldNumber + "), x9TimeZone);");
                 } else if (dataType.equals("Time")) {
-                    classWriterMain.print("Time(value, field(" + fieldNumber
-                                          + "), x9TimeZone);");
+                    classWriterMain.println("Time(value, field(" + fieldNumber + "), x9TimeZone);");
                 } else {
-                    classWriterMain.println("(value, field(" + fieldNumber
-                                            + "));");
+                    classWriterMain.println("(value, field(" + fieldNumber + "));");
                 }
             } else {
                 classWriterMain.println("        " + setterCode);
@@ -512,29 +458,18 @@ public class GenerateX937Classes {
         }
     }
 
-    /**
-     * @param fieldName
-     * @param asInt
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
-    private void intMethods(String interfaceName, int fieldNumber, String fieldName, boolean asInt,
-            boolean setterPrivate, String setterCode) {
-        if (asInt) {
-            classWriterMain.println("    public int " + fieldName + "AsInt()");
-        } else {
-            classWriterMain.println("    public int " + fieldName + "()");
-        }
+    private void intMethods(String interfaceName, int fieldNumber, String fieldName,
+                            boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            classWriterMain.println("        throws InvalidDataException;");
+            classWriterMain.print("    int " + fieldName + "AsInt()");
+            classWriterMain.println(" throws InvalidDataException;");
         } else {
-            classWriterMain.println("        throws InvalidDataException {");
+            classWriterMain.print("    public int " + fieldName + "AsInt()");
+            classWriterMain.println(" throws InvalidDataException {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain.println("        return getFieldAsInt(field("
-                                        + fieldNumber + "));");
+                classWriterMain.println("        return getFieldAsInt(field(" + fieldNumber + "));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
@@ -544,257 +479,140 @@ public class GenerateX937Classes {
                 dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asLong
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
-    private void longMethods(String interfaceName, int fieldNumber, String fieldName, boolean asLong,
-            boolean setterPrivate, String setterCode) {
-        if (asLong) {
-            classWriterMain
-                    .println("    public long " + fieldName + "AsLong()");
-        } else {
-            classWriterMain.println("    public long " + fieldName + "()");
-        }
+    private void longMethods(String interfaceName, int fieldNumber, String fieldName,
+                             boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            classWriterMain.println("        throws InvalidDataException;");
+            classWriterMain.print("    long " + fieldName + "AsLong()");
+            classWriterMain.println(" throws InvalidDataException;");
         } else {
-            classWriterMain.println("        throws InvalidDataException {");
+            classWriterMain.print("    public long " + fieldName + "AsLong()");
+            classWriterMain.println(" throws InvalidDataException {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain.println("        return getFieldAsLong(field("
-                                        + fieldNumber + "));");
+                classWriterMain.println("        return getFieldAsLong(field(" + fieldNumber + "));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "long";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asDate
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
-    private void dateMethods(String interfaceName, int fieldNumber, String fieldName, boolean asDate,
-            boolean setterPrivate, String setterCode) {
-        if (asDate) {
-            classWriterMain
-                    .println("    public Date " + fieldName + "AsDate()");
-        } else {
-            classWriterMain.println("    public Date " + fieldName + "()");
-        }
+    private void dateMethods(String interfaceName, int fieldNumber, String fieldName,
+                             boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            classWriterMain.println("        throws InvalidDataException;");
+            classWriterMain.print("    Date " + fieldName + "()");
+            classWriterMain.println(" throws InvalidDataException;");
         } else {
-            classWriterMain.println("        throws InvalidDataException {");
+            classWriterMain.print("    public Date " + fieldName + "()");
+            classWriterMain.println(" throws InvalidDataException {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain.println("        return getFieldAsDate(field("
-                                        + fieldNumber + "), x9TimeZone);");
+                classWriterMain.println("        return getFieldAsDate(field(" + fieldNumber + "), x9TimeZone);");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "Date";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asTime
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
-    private void timeMethods(String interfaceName, int fieldNumber, String fieldName, boolean asTime,
-            boolean setterPrivate, String setterCode) {
-        if (asTime) {
-            classWriterMain
-                    .println("    public Date " + fieldName + "AsTime()");
-        } else {
-            classWriterMain.println("    public Date " + fieldName + "()");
-        }
+    private void timeMethods(String interfaceName, int fieldNumber, String fieldName,
+                             boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            classWriterMain.println("        throws InvalidDataException;");
+            classWriterMain.print("    Date " + fieldName + "()");
+            classWriterMain.println(" throws InvalidDataException;");
         } else {
-            classWriterMain.println("        throws InvalidDataException {");
+            classWriterMain.print("    public Date " + fieldName + "()");
+            classWriterMain.println(" throws InvalidDataException {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain.println("        return getFieldAsTime(field("
-                                        + fieldNumber + "), x9TimeZone);");
+                classWriterMain.println("        return getFieldAsTime(field(" + fieldNumber + "), x9TimeZone);");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "Time";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asRoutingNumber
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
     private void routingNumberMethods(String interfaceName, int fieldNumber, String fieldName,
-            boolean asRoutingNumber, boolean setterPrivate, String setterCode) {
+                                      boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            if (asRoutingNumber) {
-                classWriterMain.println("    RoutingNumber " + fieldName
-                                        + "AsRoutingNumber();");
-            } else {
-                classWriterMain.println("    RoutingNumber " + fieldName
-                                        + "();");
-            }
+            classWriterMain.println("    RoutingNumber " + fieldName + "();");
         } else {
-            if (asRoutingNumber) {
-                classWriterMain.println("    public RoutingNumber " + fieldName
-                                        + "AsRoutingNumber() {");
-            } else {
-                classWriterMain.println("    public RoutingNumber " + fieldName
-                                        + "() {");
-            }
+            classWriterMain.println("    public RoutingNumber " + fieldName + "() {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain
-                        .println("        return getFieldAsRoutingNumber(field("
-                                 + fieldNumber + "));");
+                classWriterMain.println("        return getFieldAsRoutingNumber(field(" + fieldNumber + "));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "RoutingNumber";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asOnUsField
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
     private void onUsMethods(String interfaceName, int fieldNumber, String fieldName,
-            boolean asOnUsField, boolean setterPrivate, String setterCode) {
+                             boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            if (asOnUsField) {
-                classWriterMain.println("    OnUsField " + fieldName
-                                        + "AsOnUsField();");
-            } else {
-                classWriterMain.println("    OnUsField " + fieldName
-                                        + "();");
-            }
+            classWriterMain.println("    OnUsField " + fieldName + "();");
         } else {
-            if (asOnUsField) {
-                classWriterMain.println("    public OnUsField " + fieldName
-                                        + "AsOnUsField() {");
-            } else {
-                classWriterMain.println("    public OnUsField " + fieldName
-                                        + "() {");
-            }
+            classWriterMain.println("    public OnUsField " + fieldName + "() {");
             if (generatingBaseClasses) {
                 classWriterMain
                         .println("        throw new InvalidStandardLevelException();");
             } else {
                 classWriterMain
-                        .println("        return new OnUsField(getFieldAsString(field("
-                                 + fieldNumber + ")));");
+                        .println("        return new OnUsField(getFieldAsString(field(" + fieldNumber + ")));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "OnUsField";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
-    /**
-     * @param fieldName
-     * @param asByteArray
-     * @param setterPrivate TODO
-     * @param setterCode TODO
-     */
     private void binaryMethods(String interfaceName, int fieldNumber, String fieldName,
-            boolean asByteArray, boolean setterPrivate, String setterCode) {
+                               boolean setterPrivate, String setterCode) {
         if (generatingInterfaces) {
-            if (asByteArray) {
-                classWriterMain.println("    ByteArray " + fieldName
-                                        + "AsByteArray();");
-            } else {
-                classWriterMain.println("    ByteArray " + fieldName
-                                        + "();");
-            }
+            classWriterMain.println("    ByteArray " + fieldName + "();");
         } else {
-            if (asByteArray) {
-                classWriterMain.println("    public ByteArray " + fieldName
-                                        + "AsByteArray() {");
-            } else {
-                classWriterMain.println("    public ByteArray " + fieldName
-                                        + "() {");
-            }
+            classWriterMain.println("    public ByteArray " + fieldName + "() {");
             if (generatingBaseClasses) {
-                classWriterMain
-                        .println("        throw new InvalidStandardLevelException();");
+                classWriterMain.println("        throw new InvalidStandardLevelException();");
             } else {
-                classWriterMain
-                        .println("        return getFieldAsByteArray(field("
-                                 + fieldNumber + "));");
+                classWriterMain.println("        return getFieldAsByteArray(field(" + fieldNumber + "));");
             }
             classWriterMain.println("    }");
             classWriterMain.println();
         }
         String dataType = "ByteArray";
-        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode,
-                dataType);
+        setterMethod(interfaceName, fieldNumber, fieldName, setterPrivate, setterCode, dataType);
     }
 
     private FieldType calculateFieldType(String fieldType, int fieldLength) {
-        if (fieldType.equalsIgnoreCase("S")) {
-            return FieldType.STRING;
-        }
-        if (fieldType.equalsIgnoreCase("D")) {
-            return FieldType.DATE;
-        }
-        if (fieldType.equalsIgnoreCase("T")) {
-            return FieldType.TIME;
-        }
-        if (fieldType.equalsIgnoreCase("B")) {
-            return FieldType.BINARY;
-        }
-        if (fieldType.equalsIgnoreCase("R")) {
-            return FieldType.ROUTING_NUMBER;
-        }
-        if (fieldType.equalsIgnoreCase("U")) {
-            return FieldType.ONUS;
-        }
-        if (fieldType.equalsIgnoreCase("N")) {
+        FieldType fieldTypeEnum = FieldType.forCode(fieldType);
+
+        if (fieldTypeEnum == FieldType.NUMBER) {
             if (fieldLength <= 8) {
                 return FieldType.INT;
             }
             return FieldType.LONG;
         }
-        if (fieldType.equalsIgnoreCase("A")) {
+
+        if (fieldTypeEnum == FieldType.AMOUNT) {
             if (fieldLength <= 8) {
                 return FieldType.INT;
             }
             return FieldType.LONG;
         }
-        return null;
+
+        return fieldTypeEnum;
     }
 
     private void generateClassImpl(ClassDefinition classDef) {
@@ -807,8 +625,7 @@ public class GenerateX937Classes {
         currentFieldMax = classDef.getClassDefinitionItem().length;
 
         boolean hasDynamicFields = false;
-        ClassDefinitionItem[] classDefItemList = classDef
-                .getClassDefinitionItem();
+        ClassDefinitionItem[] classDefItemList = classDef.getClassDefinitionItem();
         for (ClassDefinitionItem classDefItem : classDefItemList) {
             ClassField classField = classDefItem.getClassField();
             if (classField.getFieldDynamic()) {
@@ -817,47 +634,32 @@ public class GenerateX937Classes {
             }
         }
 
-        StringBuffer sb = new StringBuffer();
-        String recordType = className;
-        if (recordType.startsWith("X937")) {
-            recordType = recordType.substring(4);
-        }
-        if (recordType.endsWith("Record")) {
-            recordType = recordType.substring(0, recordType.length() - 6);
-        }
-        for (int i = 0; i < recordType.length(); i++) {
-            if (Character.isUpperCase(recordType.charAt(i))) {
-                if (i == 0) {
-                    sb.append("TYPE_");
-                } else {
-                    sb.append("_");
-                }
-                sb.append(Character.toUpperCase(recordType.charAt(i)));
-            }
-        }
-        recordType = sb.toString();
+//        StringBuilder sb = new StringBuilder();
+//        String recordType = className;
+//        if (recordType.startsWith("X937")) {
+//            recordType = recordType.substring(4);
+//        }
+//        if (recordType.endsWith("Record")) {
+//            recordType = recordType.substring(0, recordType.length() - 6);
+//        }
+//        for (int i = 0; i < recordType.length(); i++) {
+//            if (Character.isUpperCase(recordType.charAt(i))) {
+//                if (i == 0) {
+//                    sb.append("TYPE_");
+//                } else {
+//                    sb.append("_");
+//                }
+//                sb.append(Character.toUpperCase(recordType.charAt(i)));
+//            }
+//        }
+//        recordType = sb.toString();
 
         classTop = new StringWriter(4096);
         classWriterTop = new PrintWriter(classTop);
         classMain = new StringWriter(8192);
         classWriterMain = new PrintWriter(classMain);
 
-        classWriterTop.println(
-                "/*******************************************************************************\n" +
-                " * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved\n" +
-                " *\n" +
-                " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
-                " * You may not use this file except in compliance with the License.\n" +
-                " * You may obtain a copy of the License at\n" +
-                " *\n" +
-                " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
-                " *\n" +
-                " * Unless required by applicable law or agreed to in writing, software\n" +
-                " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-                " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-                " * See the License for the specific language governing permissions and\n" +
-                " * limitations under the License.\n" +
-                " ******************************************************************************/");
+        classWriterTop.println(copyrightText());
         classWriterTop.println();
         classWriterTop.println("package " + packageName + ";");
         classWriterTop.println();
@@ -876,16 +678,12 @@ public class GenerateX937Classes {
 
         classWriterTop.println();
 
-        classWriterTop.println("public class " + classNameImpl + " extends "
-                               + classNameBase + " {");
+        classWriterTop.println("public class " + classNameImpl + " extends " + classNameBase + " {");
         classWriterTop.println();
-        classWriterTop.println("    private static int maxFieldNumber = "
-                               + currentFieldMax + ";");
-        classWriterTop
-                .println("    private static Field fields[] = new Field[maxFieldNumber+1];");
+        classWriterTop.println("    private static final int maxFieldNumber = " + currentFieldMax + ";");
+        classWriterTop.println("    private static final Field[] fields = new Field[maxFieldNumber+1];");
         if (hasDynamicFields) {
-            classWriterTop
-                    .println("    private Field localFieldCache[] = new Field[maxFieldNumber+1];");
+            classWriterTop.println("    private final Field[] localFieldCache = new Field[maxFieldNumber+1];");
         }
         classWriterTop.println();
 
@@ -893,30 +691,22 @@ public class GenerateX937Classes {
         classWriterTop.println("        fields[0] = null;");
         classWriterTop.println("        fields[1] = recordTypeField;");
 
-        classWriterMain.println("    /*");
-        classWriterMain.println("     * " + classNameImpl);
-        classWriterMain.println("     */");
-        classWriterMain.println();
-
         classWriterMain.println("    public " + classNameImpl + "() {");
         classWriterMain.println("        super();");
         classWriterMain.println("    }");
         classWriterMain.println();
 
-        classWriterMain.println("    public " + classNameImpl
-                                + "(int stdLevel) {");
+        classWriterMain.println("    public " + classNameImpl + "(int stdLevel) {");
         classWriterMain.println("        super(stdLevel);");
         classWriterMain.println("    }");
         classWriterMain.println();
 
-        classWriterMain.println("    public " + classNameImpl
-                                + "(String encoding, int stdLevel) {");
+        classWriterMain.println("    public " + classNameImpl + "(String encoding, int stdLevel) {");
         classWriterMain.println("        super(encoding, stdLevel);");
         classWriterMain.println("    }");
         classWriterMain.println();
 
-        classWriterMain.println("    public " + classNameImpl
-                                + "(ByteArray record, int stdLevel) {");
+        classWriterMain.println("    public " + classNameImpl + "(ByteArray record, int stdLevel) {");
         classWriterMain.println("        super(record, stdLevel);");
         classWriterMain.println("    }");
         classWriterMain.println();
@@ -929,8 +719,7 @@ public class GenerateX937Classes {
             ClassField classField = classDefItem.getClassField();
             if (classField.getFieldDynamic()) {
                 int i = classField.getNumber();
-                classWriterMain.println("        localFieldCache[" + i
-                                        + "] = null;");
+                classWriterMain.println("        localFieldCache[" + i + "] = null;");
             }
         }
         classWriterMain.println("    }");
@@ -944,15 +733,12 @@ public class GenerateX937Classes {
 
         classWriterMain.println("    @Override");
         classWriterMain.println("    protected Field field(int fieldNumber) {");
-        classWriterMain
-                .println("        if (fieldNumber < 1 || fieldNumber > maxFieldNumber) {");
-        classWriterMain
-                .println("            throw new IllegalArgumentException(INVALID_FIELD_NUMBER);");
+        classWriterMain.println("        if (fieldNumber < 1 || fieldNumber > maxFieldNumber) {");
+        classWriterMain.println("            throw new IllegalArgumentException(INVALID_FIELD_NUMBER);");
         classWriterMain.println("        }");
 
         if (hasDynamicFields) {
-            classWriterMain
-                    .println("        if (localFieldCache[fieldNumber] == null) {");
+            classWriterMain.println("        if (localFieldCache[fieldNumber] == null) {");
             classWriterMain.println("            switch (fieldNumber) {");
             classDefItemList = classDef.getClassDefinitionItem();
             for (ClassDefinitionItem classDefItem : classDefItemList) {
@@ -961,19 +747,16 @@ public class GenerateX937Classes {
                     int i = classField.getNumber();
                     String s = classField.getName();
                     classWriterMain.println("            case " + i + ":");
-                    classWriterMain.println("                localFieldCache["
-                                            + i + "] = calculateField" + s + "();");
+                    classWriterMain.println("                localFieldCache[" + i + "] = calculateField" + s + "();");
                     classWriterMain.println("                break;");
                 }
             }
 
             classWriterMain.println("            default:");
-            classWriterMain
-                    .println("                localFieldCache[fieldNumber] = fields[fieldNumber];");
+            classWriterMain.println("                localFieldCache[fieldNumber] = fields[fieldNumber];");
             classWriterMain.println("            }");
             classWriterMain.println("        }");
-            classWriterMain
-                    .println("        return localFieldCache[fieldNumber];");
+            classWriterMain.println("        return localFieldCache[fieldNumber];");
         } else {
             classWriterMain.println("        return fields[fieldNumber];");
         }
@@ -1003,7 +786,7 @@ public class GenerateX937Classes {
 
         }
 
-        classWriterMain.println();
+//        classWriterMain.println();
     }
 
     private void generateClassBase(InterfaceDefinition classDef) {
@@ -1021,22 +804,7 @@ public class GenerateX937Classes {
         classMain = new StringWriter(8192);
         classWriterMain = new PrintWriter(classMain);
 
-        classWriterTop.println(
-                "/*******************************************************************************\n" +
-                " * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved\n" +
-                " *\n" +
-                " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
-                " * You may not use this file except in compliance with the License.\n" +
-                " * You may obtain a copy of the License at\n" +
-                " *\n" +
-                " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
-                " *\n" +
-                " * Unless required by applicable law or agreed to in writing, software\n" +
-                " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-                " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-                " * See the License for the specific language governing permissions and\n" +
-                " * limitations under the License.\n" +
-                " ******************************************************************************/");
+        classWriterTop.println(copyrightText());
         classWriterTop.println();
         classWriterTop.println("package " + packageName + ";");
         classWriterTop.println();
@@ -1060,11 +828,6 @@ public class GenerateX937Classes {
         classWriterTop.println("        implements " + className + " {");
         classWriterTop.println();
 
-        classWriterMain.println("    /*");
-        classWriterMain.println("     * " + classNameBase);
-        classWriterMain.println("     */");
-        classWriterMain.println();
-
         classWriterMain.println("    public " + classNameBase + "() {");
         classWriterMain.println("        super();");
         classWriterMain.println("        recordType(" + recordType + ");");
@@ -1077,8 +840,7 @@ public class GenerateX937Classes {
         classWriterMain.println();
 
         classWriterMain.println("    public " + classNameBase + "(String encoding, int stdLevel) {");
-        classWriterMain.println("        super(" + recordType
-                                + ", encoding, stdLevel);");
+        classWriterMain.println("        super(" + recordType + ", encoding, stdLevel);");
         classWriterMain.println("    }");
         classWriterMain.println();
 
@@ -1090,8 +852,7 @@ public class GenerateX937Classes {
 
     private void generateClassInterface(InterfaceDefinition classDef) {
         String className = classDef.getName();
-        String classNameBase = className;
-        currentClassName = classNameBase;
+        currentClassName = className;
         log.info("Generate class: " + className);
 
         currentFieldMax = classDef.getInterfaceDefinitionItem().length;
@@ -1101,22 +862,7 @@ public class GenerateX937Classes {
         classMain = new StringWriter(8096);
         classWriterMain = new PrintWriter(classMain);
 
-        classWriterTop.println(
-                "/*******************************************************************************\n" +
-                " * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved\n" +
-                " *\n" +
-                " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
-                " * You may not use this file except in compliance with the License.\n" +
-                " * You may obtain a copy of the License at\n" +
-                " *\n" +
-                " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
-                " *\n" +
-                " * Unless required by applicable law or agreed to in writing, software\n" +
-                " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-                " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-                " * See the License for the specific language governing permissions and\n" +
-                " * limitations under the License.\n" +
-                " ******************************************************************************/");
+        classWriterTop.println(copyrightText());
         classWriterTop.println();
         classWriterTop.println("package " + packageName + ";");
         classWriterTop.println();
@@ -1132,35 +878,45 @@ public class GenerateX937Classes {
 
         classWriterTop.println();
 
-        classWriterTop.println("public interface " + classNameBase
-                               + " extends X9Record {");
-
-        classWriterMain.println("    /*");
-        classWriterMain.println("     * " + classNameBase);
-        classWriterMain.println("     */");
-        classWriterMain.println();
+        classWriterTop.println("public interface " + className + " extends X9Record {");
     }
 
     private void flushClass() {
         if (!generatingBaseClasses && !generatingInterfaces) {
             classWriterTop.println("    }");
         }
-        classWriterTop.println();
+//        classWriterTop.println();
         classWriterMain.println("}");
 
-        PrintStream classStream = null;
         File classFile = new File(packageFile, currentClassName + ".java");
         if (classFile.exists()) {
             classFile.delete();
         }
-        try {
-            classStream = new PrintStream(new FileOutputStream(classFile));
+        try (PrintStream classStream = new PrintStream(new FileOutputStream(classFile))) {
+            classStream.println(classTop.toString());
+            classStream.println(classMain.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        classStream.println(classTop.toString());
-        classStream.println(classMain.toString());
-        classStream.close();
     }
 
+    private String copyrightText() {
+        return "/*\n" +
+                " * ******************************************************************************\n" +
+                " *  Copyright (c) 2009-" + copyrightYear + " The Last Check, LLC, All Rights Reserved\n" +
+                " *\n" +
+                " *  Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                " *  You may not use this file except in compliance with the License.\n" +
+                " *  You may obtain a copy of the License at\n" +
+                " *\n" +
+                " *      http://www.apache.org/licenses/LICENSE-2.0\n" +
+                " *\n" +
+                " *  Unless required by applicable law or agreed to in writing, software\n" +
+                " *  distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                " *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                " *  See the License for the specific language governing permissions and\n" +
+                " *  limitations under the License.\n" +
+                " * ******************************************************************************\n" +
+                " */";
+    }
 }

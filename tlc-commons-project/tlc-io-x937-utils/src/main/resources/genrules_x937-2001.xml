@@ -238,7 +238,7 @@
             <classField number="3" offset="20" length="20" type="S"
                 name="PayorAccountNameExtension" />
             <classField number="4" offset="40" length="15" type="S"
-                name="AuxillaryOnUs" />
+                name="AuxiliaryOnUs" />
             <classField number="5" offset="55" length="1" type="S"
                 name="ExternalProcessingCode" />
             <classField number="6" offset="56" length="24" type="S"
@@ -267,9 +267,9 @@
                 name="BundleTotalAmount" />
             <classField number="4" offset="18" length="12" type="N"
                 name="MICRValidTotalAmount" />
-            <classField number="6" offset="30" length="48" type="S"
+            <classField number="5" offset="30" length="48" type="S"
                 name="UserField" />
-            <classField number="7" offset="78" length="2" type="S"
+            <classField number="6" offset="78" length="2" type="S"
                 name="Reserved" />
         </classDefinition>
         <classDefinition recordType="75" type="TYPE_BOX_SUMMARY"
@@ -310,7 +310,7 @@
             <classField number="2" offset="2" length="6" type="N"
                 name="BundleCount" />
             <classField number="3" offset="8" length="8" type="N"
-                name="ItemsWithinCashletterCount" />
+                name="ItemsWithinCashLetterCount" />
             <classField number="4" offset="16" length="14" type="N"
                 name="CashLetterTotalAmount" />
             <classField number="5" offset="30" length="18" type="A"

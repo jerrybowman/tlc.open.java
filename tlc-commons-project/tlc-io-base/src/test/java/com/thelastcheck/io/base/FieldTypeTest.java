@@ -18,44 +18,29 @@
 
 package com.thelastcheck.io.base;
 
-import com.google.common.collect.ImmutableMap;
-import com.thelastcheck.commons.base.collect.NullCheckingMap;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.Map;
+public class FieldTypeTest {
 
-public enum FieldType {
-	STRING("S")
-	, BINARY("B")
-	, INT("I")
-	, LONG("L")
-	, NUMBER("N")
-	, DATE("D")
-	, TIME("T")
-	, ROUTING_NUMBER("R")
-	, ONUS("U")
-	, AMOUNT("A");
+    @Test
+    public void getCode() {
+        String a = FieldType.AMOUNT.getCode();
+        Assert.assertEquals("A", a);
+    }
 
-	private static final Map<String, FieldType> codeMap;
-	static {
-		ImmutableMap.Builder<String, FieldType> builder = ImmutableMap.builder();
-		for (FieldType type : values()) {
-			builder.put(type.code, type);
-		}
-		codeMap = NullCheckingMap.decorate(builder.build());
-	}
+    @Test
+    public void forCode() {
+        FieldType a = FieldType.forCode("A");
+        Assert.assertEquals(FieldType.AMOUNT, a);
+    }
 
-	private final String code;
-
-	FieldType(String typeCode) {
-		code = typeCode;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public static FieldType forCode(String code) {
-		return codeMap.get(code);
-	}
-
+    @Test
+    public void forCodeBad() {
+        try {
+            FieldType.forCode("X");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("There is no mapping defined for: X, only know: S=STRING,B=BINARY,I=INT,L=LONG,N=NUMBER,D=DATE,T=TIME,R=ROUTING_NUMBER,U=ONUS,A=AMOUNT", e.getLocalizedMessage());
+        }
+    }
 }

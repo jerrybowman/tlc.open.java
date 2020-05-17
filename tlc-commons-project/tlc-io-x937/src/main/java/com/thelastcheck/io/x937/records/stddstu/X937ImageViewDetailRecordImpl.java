@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
+/*
+ * ******************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ******************************************************************************
+ */
 
 package com.thelastcheck.io.x937.records.stddstu;
 
@@ -29,8 +31,8 @@ import com.thelastcheck.io.x937.records.base.X937ImageViewDetailRecordBase;
 
 public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase {
 
-    private static int maxFieldNumber = 19;
-    private static Field fields[] = new Field[maxFieldNumber+1];
+    private static final int maxFieldNumber = 19;
+    private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
@@ -47,18 +49,13 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         fields[11] = new Field("DigitalSignatureMethod", 11, 35, 2, FieldType.STRING);
         fields[12] = new Field("SecurityKeySize", 12, 37, 5, FieldType.INT);
         fields[13] = new Field("StartOfProtectedData", 13, 42, 7, FieldType.STRING);
-        fields[14] = new Field("LengthofProtectedData", 14, 49, 7, FieldType.INT);
+        fields[14] = new Field("LengthOfProtectedData", 14, 49, 7, FieldType.INT);
         fields[15] = new Field("ImageRecreateIndicator", 15, 56, 1, FieldType.STRING);
         fields[16] = new Field("UserField", 16, 57, 8, FieldType.STRING);
         fields[17] = new Field("ImageTiffVarianceIndicator", 17, 65, 1, FieldType.STRING);
         fields[18] = new Field("OverrideIndicator", 18, 66, 1, FieldType.STRING);
         fields[19] = new Field("Reserved", 19, 67, 13, FieldType.STRING);
     }
-
-
-    /*
-     * X937ImageViewDetailRecordImpl
-     */
 
     public X937ImageViewDetailRecordImpl() {
         super();
@@ -93,7 +90,6 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         return fields[fieldNumber];
     }
 
-
     public String imageIndicator() {
         return getFieldAsString(field(2));
     }
@@ -121,13 +117,13 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         return this;
     }
 
-    public Date imageCreatorDate()
-        throws InvalidDataException {
+    public Date imageCreatorDate() throws InvalidDataException {
         return getFieldAsDate(field(4), x9TimeZone);
     }
 
     public X937ImageViewDetailRecord imageCreatorDate(Date value) {
-        setFieldDate(value, field(4), x9TimeZone);        return this;
+        setFieldDate(value, field(4), x9TimeZone);
+        return this;
     }
 
     public String imageCreatorDateAsString() {
@@ -166,8 +162,7 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         return this;
     }
 
-    public int imageViewDataSizeAsInt()
-        throws InvalidDataException {
+    public int imageViewDataSizeAsInt() throws InvalidDataException {
         return getFieldAsInt(field(7));
     }
 
@@ -221,8 +216,7 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         return this;
     }
 
-    public int securityKeySizeAsInt()
-        throws InvalidDataException {
+    public int securityKeySizeAsInt() throws InvalidDataException {
         return getFieldAsInt(field(12));
     }
 
@@ -240,21 +234,20 @@ public class X937ImageViewDetailRecordImpl extends X937ImageViewDetailRecordBase
         return this;
     }
 
-    public String lengthofProtectedData() {
+    public String lengthOfProtectedData() {
         return getFieldAsString(field(14));
     }
 
-    public X937ImageViewDetailRecord lengthofProtectedData(String value) {
+    public X937ImageViewDetailRecord lengthOfProtectedData(String value) {
         setField(value, field(14));
         return this;
     }
 
-    public int lengthofProtectedDataAsInt()
-        throws InvalidDataException {
+    public int lengthOfProtectedDataAsInt() throws InvalidDataException {
         return getFieldAsInt(field(14));
     }
 
-    public X937ImageViewDetailRecord lengthofProtectedData(int value) {
+    public X937ImageViewDetailRecord lengthOfProtectedData(int value) {
         setField(value, field(14));
         return this;
     }

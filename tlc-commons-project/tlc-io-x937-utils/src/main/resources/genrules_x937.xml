@@ -247,7 +247,7 @@
 			<interfaceField type="S" name="DigitalSignatureMethod" />
 			<interfaceField type="N" name="SecurityKeySize" />
 			<interfaceField type="S" name="StartOfProtectedData" />
-			<interfaceField type="N" name="LengthofProtectedData" />
+			<interfaceField type="N" name="LengthOfProtectedData" />
 			<interfaceField type="S" name="ImageRecreateIndicator" />
 			<interfaceField type="S" name="UserField" />
             <interfaceField type="S" name="ImageTiffVarianceIndicator" />
@@ -359,7 +359,7 @@
 			type="TYPE_CASH_LETTER_CONTROL" name="X937CashLetterControlRecord">
 			<interfaceField type="S" name="RecordType" />
 			<interfaceField type="N" name="BundleCount" />
-			<interfaceField type="N" name="ItemsWithinCashletterCount" />
+			<interfaceField type="N" name="ItemsWithinCashLetterCount" />
 			<interfaceField type="N" name="CashLetterTotalAmount" length="14" />
 			<interfaceField type="A" name="ImagesWithinCashLetterCount" length="9" />
             <interfaceField type="S" name="FinalDestinationName" />

@@ -525,7 +525,7 @@
             <classField number="13" offset="42" length="7" type="S"
                 name="StartOfProtectedData" />
             <classField number="14" offset="49" length="7" type="N"
-                name="LengthofProtectedData" />
+                name="LengthOfProtectedData" />
             <classField number="15" offset="56" length="1" type="S"
                 name="ImageRecreateIndicator" />
             <classField number="16" offset="57" length="8" type="S"
@@ -831,7 +831,7 @@
             <classField number="2" offset="2" length="6" type="N"
                 name="BundleCount" />
             <classField number="3" offset="8" length="8" type="N"
-                name="ItemsWithinCashletterCount" />
+                name="ItemsWithinCashLetterCount" />
             <classField number="4" offset="16" length="14" type="A"
                 name="CashLetterTotalAmount" />
             <classField number="5" offset="30" length="9" type="N"

@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
+/*
+ * ******************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ******************************************************************************
+ */
 
 package com.thelastcheck.io.x937.records.stddstu;
 
@@ -29,8 +31,8 @@ import com.thelastcheck.io.x937.records.base.X937RoutingNumberSummaryRecordBase;
 
 public class X937RoutingNumberSummaryRecordImpl extends X937RoutingNumberSummaryRecordBase {
 
-    private static int maxFieldNumber = 6;
-    private static Field fields[] = new Field[maxFieldNumber+1];
+    private static final int maxFieldNumber = 6;
+    private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
@@ -41,11 +43,6 @@ public class X937RoutingNumberSummaryRecordImpl extends X937RoutingNumberSummary
         fields[5] = new Field("UserField", 5, 31, 24, FieldType.STRING);
         fields[6] = new Field("Reserved", 6, 55, 25, FieldType.STRING);
     }
-
-
-    /*
-     * X937RoutingNumberSummaryRecordImpl
-     */
 
     public X937RoutingNumberSummaryRecordImpl() {
         super();
@@ -80,7 +77,6 @@ public class X937RoutingNumberSummaryRecordImpl extends X937RoutingNumberSummary
         return fields[fieldNumber];
     }
 
-
     public RoutingNumber routingNumberWithinCashLetter() {
         return getFieldAsRoutingNumber(field(2));
     }
@@ -108,8 +104,7 @@ public class X937RoutingNumberSummaryRecordImpl extends X937RoutingNumberSummary
         return this;
     }
 
-    public long routingNumberTotalAmountAsLong()
-        throws InvalidDataException {
+    public long routingNumberTotalAmountAsLong() throws InvalidDataException {
         return getFieldAsLong(field(3));
     }
 
@@ -127,8 +122,7 @@ public class X937RoutingNumberSummaryRecordImpl extends X937RoutingNumberSummary
         return this;
     }
 
-    public int routingNumberItemCountAsInt()
-        throws InvalidDataException {
+    public int routingNumberItemCountAsInt() throws InvalidDataException {
         return getFieldAsInt(field(4));
     }
 

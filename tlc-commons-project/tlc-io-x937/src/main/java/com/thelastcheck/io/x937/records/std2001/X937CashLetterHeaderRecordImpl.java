@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
+/*
+ * ******************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ******************************************************************************
+ */
 
 package com.thelastcheck.io.x937.records.std2001;
 
@@ -29,8 +31,8 @@ import com.thelastcheck.io.x937.records.base.X937CashLetterHeaderRecordBase;
 
 public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBase {
 
-    private static int maxFieldNumber = 14;
-    private static Field fields[] = new Field[maxFieldNumber+1];
+    private static final int maxFieldNumber = 14;
+    private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
@@ -49,11 +51,6 @@ public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBa
         fields[13] = new Field("UserField", 13, 76, 3, FieldType.STRING);
         fields[14] = new Field("Reserved", 14, 79, 1, FieldType.STRING);
     }
-
-
-    /*
-     * X937CashLetterHeaderRecordImpl
-     */
 
     public X937CashLetterHeaderRecordImpl() {
         super();
@@ -87,7 +84,6 @@ public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBa
         }
         return fields[fieldNumber];
     }
-
 
     public String collectionTypeIndicator() {
         return getFieldAsString(field(2));
@@ -134,13 +130,13 @@ public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBa
         return this;
     }
 
-    public Date cashLetterBusinessDate()
-        throws InvalidDataException {
+    public Date cashLetterBusinessDate() throws InvalidDataException {
         return getFieldAsDate(field(5), x9TimeZone);
     }
 
     public X937CashLetterHeaderRecord cashLetterBusinessDate(Date value) {
-        setFieldDate(value, field(5), x9TimeZone);        return this;
+        setFieldDate(value, field(5), x9TimeZone);
+        return this;
     }
 
     public String cashLetterBusinessDateAsString() {
@@ -152,13 +148,13 @@ public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBa
         return this;
     }
 
-    public Date cashLetterCreationDate()
-        throws InvalidDataException {
+    public Date cashLetterCreationDate() throws InvalidDataException {
         return getFieldAsDate(field(6), x9TimeZone);
     }
 
     public X937CashLetterHeaderRecord cashLetterCreationDate(Date value) {
-        setFieldDate(value, field(6), x9TimeZone);        return this;
+        setFieldDate(value, field(6), x9TimeZone);
+        return this;
     }
 
     public String cashLetterCreationDateAsString() {
@@ -170,13 +166,13 @@ public class X937CashLetterHeaderRecordImpl extends X937CashLetterHeaderRecordBa
         return this;
     }
 
-    public Date cashLetterCreationTime()
-        throws InvalidDataException {
+    public Date cashLetterCreationTime() throws InvalidDataException {
         return getFieldAsTime(field(7), x9TimeZone);
     }
 
     public X937CashLetterHeaderRecord cashLetterCreationTime(Date value) {
-        setFieldTime(value, field(7), x9TimeZone);        return this;
+        setFieldTime(value, field(7), x9TimeZone);
+        return this;
     }
 
     public String cashLetterCreationTimeAsString() {
