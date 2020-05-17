@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
+/*
+ * ****************************************************************************
+ * Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * You may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- ******************************************************************************/
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.io.x9;
 
@@ -32,8 +34,7 @@ public interface X9Record extends Record {
 	int STANDARD_LEVEL_1994 = 1;
 	int STANDARD_LEVEL_2001 = 2;
 	int STANDARD_LEVEL_DSTU = 3;
-	int STANDARD_LEVEL_SVPCO = 13;
-	int TYPE_FILE_HEADER = 01;
+	int TYPE_FILE_HEADER = 1;
 	int TYPE_CASH_LETTER_HEADER = 10;
 	int TYPE_BUNDLE_HEADER = 20;
 	int TYPE_CHECK_DETAIL = 25;
@@ -75,7 +76,7 @@ public interface X9Record extends Record {
 	int recordStandardLevel();
 
 	/**
-	 * @param stdLevel
+	 * @param standardLevel
 	 *            the standard level for this record.
 	 */
 	X9Record recordStandardLevel(int standardLevel);
