@@ -31,9 +31,26 @@ public interface X9Record extends Record {
 
 	String FIELD_RECORD_TYPE_NAME = "RecordType";
 	int FIELD_RECORD_TYPE_NUMBER = 1;
-	int STANDARD_LEVEL_1994 = 1;
-	int STANDARD_LEVEL_2001 = 2;
-	int STANDARD_LEVEL_DSTU = 3;
+	int STANDARD_LEVEL_X9_37_1994 = 1;
+	int STANDARD_LEVEL_X9_37_2001 = 2;
+	int STANDARD_LEVEL_X9_100_187_2008 = 3;
+
+	/**
+	 * @deprecated Use {@link #STANDARD_LEVEL_X9_37_1994}
+	 */
+	@Deprecated
+	int STANDARD_LEVEL_1994 = STANDARD_LEVEL_X9_37_1994;
+	/**
+	 * @deprecated Use {@link #STANDARD_LEVEL_X9_37_2001}
+	 */
+	@Deprecated
+	int STANDARD_LEVEL_2001 = STANDARD_LEVEL_X9_37_2001;
+	/**
+	 * @deprecated Use {@link #STANDARD_LEVEL_X9_100_187_2008}
+	 */
+	@Deprecated
+	int STANDARD_LEVEL_DSTU = STANDARD_LEVEL_X9_100_187_2008;
+
 	int TYPE_FILE_HEADER = 1;
 	int TYPE_CASH_LETTER_HEADER = 10;
 	int TYPE_BUNDLE_HEADER = 20;

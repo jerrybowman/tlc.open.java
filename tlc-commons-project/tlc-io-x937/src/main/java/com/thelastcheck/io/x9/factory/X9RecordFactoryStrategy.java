@@ -22,15 +22,31 @@ import com.thelastcheck.io.x937.records.X937FileHeaderRecord;
 
 public interface X9RecordFactoryStrategy {
 
-    String X937_STANDARD_1994 = "1994";
-    String X937_STANDARD_2001 = "2001";
-    String X937_STANDARD_DSTU = "DSTU";
+    String ANS_STANDARD_X9_37_1994 = "1994";
+    String ANS_STANDARD_X9_37_2001 = "2001";
+    String ANS_STANDARD_X9_100_187_2008 = "2008";
+
+    /**
+     * @deprecated Use {@link #ANS_STANDARD_X9_37_1994} instead
+     */
+    @Deprecated
+    String X937_STANDARD_1994 = ANS_STANDARD_X9_37_1994;
+    /**
+     * @deprecated Use {@link #ANS_STANDARD_X9_37_2001} instead
+     */
+    @Deprecated
+    String X937_STANDARD_2001 = ANS_STANDARD_X9_37_2001;
+    /**
+     * @deprecated Use {@link #ANS_STANDARD_X9_100_187_2008} instead
+     */
+    @Deprecated
+    String X937_STANDARD_DSTU = ANS_STANDARD_X9_100_187_2008;
 
     /**
      * Return a factory suitable for processing files based on the given
      * standard identifier.
      *
-     * @param standardIdentifier is an identifier of the standard to detemine what kind of
+     * @param standardIdentifier is an identifier of the standard to determine what kind of
      *                           factory need
      * @return an X9RecordFactory based on the given standard.
      */

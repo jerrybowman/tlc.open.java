@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.io.x9;
 
@@ -25,7 +27,7 @@ import com.thelastcheck.io.base.Record;
 
 public class X9OutputStreamRecordWriter extends OutputStreamRecordWriter {
 
-	private ByteArray lengthPrefixBuffer = new ByteArray(4);
+	private final ByteArray lengthPrefixBuffer = new ByteArray(4);
 
 	public X9OutputStreamRecordWriter(OutputStream os) {
 		super(os);
@@ -33,7 +35,7 @@ public class X9OutputStreamRecordWriter extends OutputStreamRecordWriter {
 
 	protected void writeRecord(Record record) throws IOException {
 		X9Record x9Record = (X9Record) record;
-		if (x9Record.recordStandardLevel() >= X9Record.STANDARD_LEVEL_DSTU) {
+		if (x9Record.recordStandardLevel() >= X9Record.STANDARD_LEVEL_X9_100_187_2008) {
 			int recordLength = x9Record.length();
 			lengthPrefixBuffer.write(recordLength, 0);
 			write(lengthPrefixBuffer);

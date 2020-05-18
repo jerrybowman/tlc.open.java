@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.io.x9;
 
@@ -29,7 +31,7 @@ import com.thelastcheck.io.x937.records.X937FileControlRecord;
 import com.thelastcheck.io.x937.records.X937ReturnRecord;
 
 public class ControlTotalsRecordFilter implements RecordFilter {
-    private static Logger log = LoggerFactory.getLogger(ControlTotalsRecordFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(ControlTotalsRecordFilter.class);
 
     private int totalRecordCount;
     private int bundleItemCount;
@@ -97,7 +99,7 @@ public class ControlTotalsRecordFilter implements RecordFilter {
             case X9Record.TYPE_CASH_LETTER_CONTROL:
                 X937CashLetterControlRecord clcr = (X937CashLetterControlRecord) x9Record;
                 clcr.cashLetterTotalAmount(cashLetterTotalAmount);
-                clcr.itemsWithinCashletterCount(cashLetterItemCount);
+                clcr.itemsWithinCashLetterCount(cashLetterItemCount);
                 clcr.imagesWithinCashLetterCount(cashLetterImagesCount);
                 clcr.bundleCount(cashLetterBundleCount);
                 fileItemCount += cashLetterItemCount;

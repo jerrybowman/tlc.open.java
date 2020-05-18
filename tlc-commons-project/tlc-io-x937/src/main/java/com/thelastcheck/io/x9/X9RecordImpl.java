@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.io.x9;
 
@@ -26,17 +28,17 @@ public abstract class X9RecordImpl extends RecordImpl implements X9Record {
 
 	private int recordType;
 	private int recordStandardLevel;
-	protected static Field recordTypeField = new Field(FIELD_RECORD_TYPE_NAME,
-			FIELD_RECORD_TYPE_NUMBER, 0, 2, FieldType.INT);
-	private static Field headerStandardLevelField = new Field("standardLevel",
-			2, 2, 2, FieldType.INT);
+	protected static final Field recordTypeField =
+			new Field(FIELD_RECORD_TYPE_NAME, FIELD_RECORD_TYPE_NUMBER, 0, 2, FieldType.INT);
+	private static final Field headerStandardLevelField =
+			new Field("standardLevel", 2, 2, 2, FieldType.INT);
 
 	/**
 	 * Create an empty X9.37 record object as EBCDIC with no record type or
 	 * standard level.
 	 */
 	public X9RecordImpl() {
-		this(0, ENCODING_EBCDIC, X9Record.STANDARD_LEVEL_DSTU);
+		this(0, ENCODING_EBCDIC, X9Record.STANDARD_LEVEL_X9_100_187_2008);
 	}
 
 	/**
@@ -86,8 +88,7 @@ public abstract class X9RecordImpl extends RecordImpl implements X9Record {
 		initializeRecordType();
 		if (recordType() == X9Record.TYPE_FILE_HEADER) {
 			try {
-				standardLevel = headerStandardLevelField
-						.extractStringAsInt(record);
+				standardLevel = headerStandardLevelField.extractStringAsInt(record);
 			} catch (InvalidDataException e1) {
 			}
 		}

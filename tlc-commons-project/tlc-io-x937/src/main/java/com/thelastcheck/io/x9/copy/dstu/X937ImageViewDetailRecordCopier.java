@@ -12,7 +12,7 @@ import com.thelastcheck.io.x937.records.X937ImageViewDetailRecord;
  */
 public class X937ImageViewDetailRecordCopier implements X937RecordCopier {
 
-    private X9RecordFactory factory;
+    private final X9RecordFactory factory;
 
     public X937ImageViewDetailRecordCopier(X9RecordFactory factory) {
         this.factory = factory;
@@ -35,7 +35,7 @@ public class X937ImageViewDetailRecordCopier implements X937RecordCopier {
         out.digitalSignatureMethod(in.digitalSignatureMethod());
         out.securityKeySize(in.securityKeySize());
         out.startOfProtectedData(in.startOfProtectedData());
-        out.lengthofProtectedData(in.lengthofProtectedData());
+        out.lengthOfProtectedData(in.lengthOfProtectedData());
         out.imageRecreateIndicator(in.imageRecreateIndicator());
         out.userField(in.userField());
         out.imageTiffVarianceIndicator(in.imageTiffVarianceIndicator());

@@ -13,7 +13,7 @@ import com.thelastcheck.io.x937.records.X937CashLetterControlRecord;
  */
 public class X937CashLetterControlRecordCopier implements X937RecordCopier {
 
-    private X9RecordFactory factory;
+    private final X9RecordFactory factory;
 
     public X937CashLetterControlRecordCopier(X9RecordFactory factory) {
         this.factory = factory;
@@ -25,7 +25,7 @@ public class X937CashLetterControlRecordCopier implements X937RecordCopier {
         X937CashLetterControlRecord out = (X937CashLetterControlRecord) output;
 
         out.bundleCount(in.bundleCount());
-        out.itemsWithinCashletterCount(in.itemsWithinCashletterCount());
+        out.itemsWithinCashLetterCount(in.itemsWithinCashLetterCount());
         out.cashLetterTotalAmount(in.cashLetterTotalAmount());
         out.imagesWithinCashLetterCount(in.imagesWithinCashLetterCount());
         out.ECEInstitutionName(in.ECEInstitutionName());

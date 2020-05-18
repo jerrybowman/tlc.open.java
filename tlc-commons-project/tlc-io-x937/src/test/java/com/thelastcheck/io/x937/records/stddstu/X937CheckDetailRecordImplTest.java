@@ -14,9 +14,9 @@ import static org.junit.Assert.assertEquals;
 public class X937CheckDetailRecordImplTest {
 
     @Test
-    public void doesClone() throws CloneNotSupportedException {
+    public void doesClone() {
         X9RecordFactoryStrategy strategy = new DefaultX9RecordFactoryStrategy();
-        X9RecordFactory factory = strategy.factory(X9RecordFactoryStrategy.X937_STANDARD_DSTU);
+        X9RecordFactory factory = strategy.factory(X9RecordFactoryStrategy.ANS_STANDARD_X9_100_187_2008);
         Record x9Record = factory.newX9Record(X9Record.TYPE_CHECK_DETAIL);
         X937CheckDetailRecord check = (X937CheckDetailRecord) x9Record;
         check.recordPosition(10);
@@ -28,9 +28,9 @@ public class X937CheckDetailRecordImplTest {
     }
 
     @Test
-    public void doesDuplicate() throws CloneNotSupportedException {
+    public void doesDuplicate() {
         X9RecordFactoryStrategy strategy = new DefaultX9RecordFactoryStrategy();
-        X9RecordFactory factory = strategy.factory(X9RecordFactoryStrategy.X937_STANDARD_DSTU);
+        X9RecordFactory factory = strategy.factory(X9RecordFactoryStrategy.ANS_STANDARD_X9_100_187_2008);
         Record x9Record = factory.newX9Record(X9Record.TYPE_CHECK_DETAIL);
         X937CheckDetailRecord check = (X937CheckDetailRecord) x9Record;
         check.recordPosition(10);

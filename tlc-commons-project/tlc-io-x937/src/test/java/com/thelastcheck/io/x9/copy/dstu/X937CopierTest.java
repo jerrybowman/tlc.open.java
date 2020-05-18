@@ -38,7 +38,7 @@ public class X937CopierTest {
             RecordCountRecordFilter recordCountRecordFilter = new RecordCountRecordFilter();
             reader.addFilter(recordCountRecordFilter);
             X9RecordFactory factory = new DefaultX9RecordFactoryStrategy()
-                    .factory(X9RecordFactoryStrategy.X937_STANDARD_DSTU, X9Record.ENCODING_EBCDIC);
+                    .factory(X9RecordFactoryStrategy.ANS_STANDARD_X9_100_187_2008, X9Record.ENCODING_EBCDIC);
             X937Copier copier = new X937Copier(factory);
 
             for (Record record : reader) {

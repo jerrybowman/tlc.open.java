@@ -34,12 +34,12 @@ public class DefaultX9RecordFactoryStrategy implements X9RecordFactoryStrategy {
         }
         String encoding = fileHeaderRecord.record().getEncoding();
         switch (standardLevel) {
-            case X9Record.STANDARD_LEVEL_DSTU:
-                return factory(X937_STANDARD_DSTU, encoding);
-            case X9Record.STANDARD_LEVEL_2001:
-                return factory(X937_STANDARD_2001, encoding);
-            case X9Record.STANDARD_LEVEL_1994:
-                return factory(X937_STANDARD_1994, encoding);
+            case X9Record.STANDARD_LEVEL_X9_100_187_2008:
+                return factory(ANS_STANDARD_X9_100_187_2008, encoding);
+            case X9Record.STANDARD_LEVEL_X9_37_2001:
+                return factory(ANS_STANDARD_X9_37_2001, encoding);
+            case X9Record.STANDARD_LEVEL_X9_37_1994:
+                return factory(ANS_STANDARD_X9_37_1994, encoding);
             default:
                 throw new InvalidStandardLevelException();
         }
@@ -51,11 +51,11 @@ public class DefaultX9RecordFactoryStrategy implements X9RecordFactoryStrategy {
 
     public X9RecordFactory factory(String standardIdentifier, String encoding) {
         switch (standardIdentifier) {
-            case X937_STANDARD_DSTU:
+            case ANS_STANDARD_X9_100_187_2008:
                 return new X937RecordFactoryDSTU(encoding);
-            case X937_STANDARD_1994:
+            case ANS_STANDARD_X9_37_1994:
                 return new X937RecordFactory1994(encoding);
-            case X937_STANDARD_2001:
+            case ANS_STANDARD_X9_37_2001:
                 return new X937RecordFactory2001(encoding);
             default:
                 throw new InvalidStandardLevelException();
