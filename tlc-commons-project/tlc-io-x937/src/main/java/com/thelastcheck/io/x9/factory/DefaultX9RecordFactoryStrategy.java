@@ -52,7 +52,7 @@ public class DefaultX9RecordFactoryStrategy implements X9RecordFactoryStrategy {
     public X9RecordFactory factory(String standardIdentifier, String encoding) {
         switch (standardIdentifier) {
             case ANS_STANDARD_X9_100_187_2008:
-                return new X937RecordFactoryDSTU(encoding);
+                return new X937RecordFactory2008(encoding);
             case ANS_STANDARD_X9_37_1994:
                 return new X937RecordFactory1994(encoding);
             case ANS_STANDARD_X9_37_2001:

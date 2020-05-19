@@ -16,7 +16,7 @@
  * ******************************************************************************
  */
 
-package com.thelastcheck.io.x937.records.stddstu;
+package com.thelastcheck.io.x937.records.std2008;
 
 import java.util.Date;
 

@@ -16,7 +16,7 @@
  * ******************************************************************************
  */
 
-package com.thelastcheck.io.x937.records.stddstu;
+package com.thelastcheck.io.x937.records.std2008;
 
 import java.util.Date;
 
@@ -26,10 +26,10 @@ import com.thelastcheck.commons.base.fields.RoutingNumber;
 import com.thelastcheck.commons.buffer.ByteArray;
 import com.thelastcheck.io.base.Field;
 import com.thelastcheck.io.base.FieldType;
-import com.thelastcheck.io.x937.records.X937CheckDetailAddendumARecord;
-import com.thelastcheck.io.x937.records.base.X937CheckDetailAddendumARecordBase;
+import com.thelastcheck.io.x937.records.X937ReturnAddendumARecord;
+import com.thelastcheck.io.x937.records.base.X937ReturnAddendumARecordBase;
 
-public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumARecordBase {
+public class X937ReturnAddendumARecordImpl extends X937ReturnAddendumARecordBase {
 
     private static final int maxFieldNumber = 13;
     private static final Field[] fields = new Field[maxFieldNumber+1];
@@ -37,7 +37,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
     static {
         fields[0] = null;
         fields[1] = recordTypeField;
-        fields[2] = new Field("CheckDetailAddendumARecordNumber", 2, 2, 1, FieldType.INT);
+        fields[2] = new Field("ReturnAddendumARecordNumber", 2, 2, 1, FieldType.INT);
         fields[3] = new Field("BOFDRoutingNumber", 3, 3, 9, FieldType.ROUTING_NUMBER);
         fields[4] = new Field("BOFDBusinessDate", 4, 12, 8, FieldType.DATE);
         fields[5] = new Field("BOFDItemSequenceNumber", 5, 20, 15, FieldType.STRING);
@@ -51,19 +51,19 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         fields[13] = new Field("Reserved", 13, 77, 3, FieldType.STRING);
     }
 
-    public X937CheckDetailAddendumARecordImpl() {
+    public X937ReturnAddendumARecordImpl() {
         super();
     }
 
-    public X937CheckDetailAddendumARecordImpl(int stdLevel) {
+    public X937ReturnAddendumARecordImpl(int stdLevel) {
         super(stdLevel);
     }
 
-    public X937CheckDetailAddendumARecordImpl(String encoding, int stdLevel) {
+    public X937ReturnAddendumARecordImpl(String encoding, int stdLevel) {
         super(encoding, stdLevel);
     }
 
-    public X937CheckDetailAddendumARecordImpl(ByteArray record, int stdLevel) {
+    public X937ReturnAddendumARecordImpl(ByteArray record, int stdLevel) {
         super(record, stdLevel);
     }
 
@@ -84,20 +84,20 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return fields[fieldNumber];
     }
 
-    public String checkDetailAddendumARecordNumber() {
+    public String returnAddendumARecordNumber() {
         return getFieldAsString(field(2));
     }
 
-    public X937CheckDetailAddendumARecord checkDetailAddendumARecordNumber(String value) {
+    public X937ReturnAddendumARecord returnAddendumARecordNumber(String value) {
         setField(value, field(2));
         return this;
     }
 
-    public int checkDetailAddendumARecordNumberAsInt() throws InvalidDataException {
+    public int returnAddendumARecordNumberAsInt() throws InvalidDataException {
         return getFieldAsInt(field(2));
     }
 
-    public X937CheckDetailAddendumARecord checkDetailAddendumARecordNumber(int value) {
+    public X937ReturnAddendumARecord returnAddendumARecordNumber(int value) {
         setField(value, field(2));
         return this;
     }
@@ -106,7 +106,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsRoutingNumber(field(3));
     }
 
-    public X937CheckDetailAddendumARecord BOFDRoutingNumber(RoutingNumber value) {
+    public X937ReturnAddendumARecord BOFDRoutingNumber(RoutingNumber value) {
         setField(value, field(3));
         return this;
     }
@@ -115,7 +115,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(3));
     }
 
-    public X937CheckDetailAddendumARecord BOFDRoutingNumber(String value) {
+    public X937ReturnAddendumARecord BOFDRoutingNumber(String value) {
         setField(value, field(3));
         return this;
     }
@@ -124,7 +124,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsDate(field(4), x9TimeZone);
     }
 
-    public X937CheckDetailAddendumARecord BOFDBusinessDate(Date value) {
+    public X937ReturnAddendumARecord BOFDBusinessDate(Date value) {
         setFieldDate(value, field(4), x9TimeZone);
         return this;
     }
@@ -133,7 +133,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(4));
     }
 
-    public X937CheckDetailAddendumARecord BOFDBusinessDate(String value) {
+    public X937ReturnAddendumARecord BOFDBusinessDate(String value) {
         setField(value, field(4));
         return this;
     }
@@ -142,7 +142,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(5));
     }
 
-    public X937CheckDetailAddendumARecord BOFDItemSequenceNumber(String value) {
+    public X937ReturnAddendumARecord BOFDItemSequenceNumber(String value) {
         setField(value, field(5));
         return this;
     }
@@ -151,7 +151,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(6));
     }
 
-    public X937CheckDetailAddendumARecord depositAccountNumberAtBOFD(String value) {
+    public X937ReturnAddendumARecord depositAccountNumberAtBOFD(String value) {
         setField(value, field(6));
         return this;
     }
@@ -160,7 +160,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(7));
     }
 
-    public X937CheckDetailAddendumARecord BOFDDepositBranch(String value) {
+    public X937ReturnAddendumARecord BOFDDepositBranch(String value) {
         setField(value, field(7));
         return this;
     }
@@ -169,7 +169,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(8));
     }
 
-    public X937CheckDetailAddendumARecord payeeName(String value) {
+    public X937ReturnAddendumARecord payeeName(String value) {
         setField(value, field(8));
         return this;
     }
@@ -178,7 +178,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(9));
     }
 
-    public X937CheckDetailAddendumARecord truncationIndicator(String value) {
+    public X937ReturnAddendumARecord truncationIndicator(String value) {
         setField(value, field(9));
         return this;
     }
@@ -187,7 +187,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(10));
     }
 
-    public X937CheckDetailAddendumARecord BOFDConversionIndicator(String value) {
+    public X937ReturnAddendumARecord BOFDConversionIndicator(String value) {
         setField(value, field(10));
         return this;
     }
@@ -196,7 +196,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(11));
     }
 
-    public X937CheckDetailAddendumARecord BOFDCorrectionIndicator(String value) {
+    public X937ReturnAddendumARecord BOFDCorrectionIndicator(String value) {
         setField(value, field(11));
         return this;
     }
@@ -205,7 +205,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(12));
     }
 
-    public X937CheckDetailAddendumARecord userField(String value) {
+    public X937ReturnAddendumARecord userField(String value) {
         setField(value, field(12));
         return this;
     }
@@ -214,7 +214,7 @@ public class X937CheckDetailAddendumARecordImpl extends X937CheckDetailAddendumA
         return getFieldAsString(field(13));
     }
 
-    public X937CheckDetailAddendumARecord reserved(String value) {
+    public X937ReturnAddendumARecord reserved(String value) {
         setField(value, field(13));
         return this;
     }

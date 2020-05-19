@@ -30,7 +30,7 @@ import com.thelastcheck.io.x9.factory.DefaultX9RecordFactoryStrategy;
 import com.thelastcheck.io.x9.factory.X9RecordFactory;
 import com.thelastcheck.io.x9.factory.X9RecordFactoryStrategy;
 import com.thelastcheck.io.x937.records.X937FileHeaderRecord;
-import com.thelastcheck.io.x937.records.stddstu.X937FileHeaderRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937FileHeaderRecordImpl;
 
 public class X9RandomAccessFileRecordReader extends
 		RandomAccessFileRecordReader {

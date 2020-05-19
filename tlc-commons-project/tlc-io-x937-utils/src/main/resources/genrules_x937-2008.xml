@@ -16,7 +16,7 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <x937GenRules>
-    <classDefinitionList standard="dstu" package="com.thelastcheck.io.x937.records">
+    <classDefinitionList standard="2008" package="com.thelastcheck.io.x937.records">
         <classDefinition recordType="01" type="TYPE_FILE_HEADER"
             name="X937FileHeaderRecord">
             <classField number="1" offset="0" length="2" type="S"

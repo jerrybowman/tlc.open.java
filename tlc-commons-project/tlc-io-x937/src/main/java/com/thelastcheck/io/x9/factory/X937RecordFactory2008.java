@@ -26,30 +26,30 @@ import com.thelastcheck.io.x937.records.X937CheckDetailAddendumBRecord;
 import com.thelastcheck.io.x937.records.X937FileHeaderRecord;
 import com.thelastcheck.io.x937.records.X937ImageViewDataRecord;
 import com.thelastcheck.io.x937.records.X937ReturnAddendumCRecord;
-import com.thelastcheck.io.x937.records.stddstu.X937AccountTotalsDetailRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937BoxSummaryRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937BundleControlRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937BundleHeaderRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CashLetterControlRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CashLetterHeaderRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CheckDetailAddendumARecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CheckDetailAddendumBRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CheckDetailAddendumCRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937CheckDetailRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937FileControlRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937FileHeaderRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ImageViewAnalysisRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ImageViewDataRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ImageViewDetailRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937NonHitTotalsDetailRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ReturnAddendumARecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ReturnAddendumBRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ReturnAddendumCRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ReturnAddendumDRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937ReturnRecordImpl;
-import com.thelastcheck.io.x937.records.stddstu.X937RoutingNumberSummaryRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937AccountTotalsDetailRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937BoxSummaryRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937BundleControlRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937BundleHeaderRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CashLetterControlRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CashLetterHeaderRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CheckDetailAddendumARecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CheckDetailAddendumBRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CheckDetailAddendumCRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937CheckDetailRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937FileControlRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937FileHeaderRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ImageViewAnalysisRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ImageViewDataRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ImageViewDetailRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937NonHitTotalsDetailRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ReturnAddendumARecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ReturnAddendumBRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ReturnAddendumCRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ReturnAddendumDRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937ReturnRecordImpl;
+import com.thelastcheck.io.x937.records.std2008.X937RoutingNumberSummaryRecordImpl;
 
-public class X937RecordFactoryDSTU implements X9RecordFactory {
+public class X937RecordFactory2008 implements X9RecordFactory {
 
     private static final String BAD_RECORD_TYPE_NOT_A_VALID_2_DIGIT_NUMBER = "Bad record type - not a valid 2-digit number";
     private static final String RECORD_TYPE = "Record type [";
@@ -61,11 +61,11 @@ public class X937RecordFactoryDSTU implements X9RecordFactory {
     private final String encoding;
     private final ByteArray emptyByteArray = new ByteArray(0);
 
-    public X937RecordFactoryDSTU() {
+    public X937RecordFactory2008() {
         encoding = X9Record.ENCODING_EBCDIC;
     }
 
-    public X937RecordFactoryDSTU(String encoding) {
+    public X937RecordFactory2008(String encoding) {
         this.encoding = encoding;
     }
 

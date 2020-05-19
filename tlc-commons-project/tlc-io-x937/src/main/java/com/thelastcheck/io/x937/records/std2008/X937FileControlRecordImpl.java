@@ -16,7 +16,7 @@
  * ******************************************************************************
  */
 
-package com.thelastcheck.io.x937.records.stddstu;
+package com.thelastcheck.io.x937.records.std2008;
 
 import java.util.Date;
 
@@ -26,10 +26,10 @@ import com.thelastcheck.commons.base.fields.RoutingNumber;
 import com.thelastcheck.commons.buffer.ByteArray;
 import com.thelastcheck.io.base.Field;
 import com.thelastcheck.io.base.FieldType;
-import com.thelastcheck.io.x937.records.X937CashLetterControlRecord;
-import com.thelastcheck.io.x937.records.base.X937CashLetterControlRecordBase;
+import com.thelastcheck.io.x937.records.X937FileControlRecord;
+import com.thelastcheck.io.x937.records.base.X937FileControlRecordBase;
 
-public class X937CashLetterControlRecordImpl extends X937CashLetterControlRecordBase {
+public class X937FileControlRecordImpl extends X937FileControlRecordBase {
 
     private static final int maxFieldNumber = 8;
     private static final Field[] fields = new Field[maxFieldNumber+1];
@@ -37,28 +37,28 @@ public class X937CashLetterControlRecordImpl extends X937CashLetterControlRecord
     static {
         fields[0] = null;
         fields[1] = recordTypeField;
-        fields[2] = new Field("BundleCount", 2, 2, 6, FieldType.INT);
-        fields[3] = new Field("ItemsWithinCashLetterCount", 3, 8, 8, FieldType.INT);
-        fields[4] = new Field("CashLetterTotalAmount", 4, 16, 14, FieldType.LONG);
-        fields[5] = new Field("ImagesWithinCashLetterCount", 5, 30, 9, FieldType.LONG);
-        fields[6] = new Field("ECEInstitutionName", 6, 39, 18, FieldType.STRING);
-        fields[7] = new Field("SettlementDate", 7, 57, 8, FieldType.DATE);
-        fields[8] = new Field("Reserved", 8, 65, 15, FieldType.STRING);
+        fields[2] = new Field("CashLetterCount", 2, 2, 6, FieldType.INT);
+        fields[3] = new Field("TotalRecordCount", 3, 8, 8, FieldType.INT);
+        fields[4] = new Field("TotalItemCount", 4, 16, 8, FieldType.INT);
+        fields[5] = new Field("FileTotalAmount", 5, 24, 16, FieldType.LONG);
+        fields[6] = new Field("ImmediateOriginContactName", 6, 40, 14, FieldType.STRING);
+        fields[7] = new Field("ImmediateOriginContactPhoneNumber", 7, 54, 10, FieldType.STRING);
+        fields[8] = new Field("Reserved", 8, 64, 16, FieldType.STRING);
     }
 
-    public X937CashLetterControlRecordImpl() {
+    public X937FileControlRecordImpl() {
         super();
     }
 
-    public X937CashLetterControlRecordImpl(int stdLevel) {
+    public X937FileControlRecordImpl(int stdLevel) {
         super(stdLevel);
     }
 
-    public X937CashLetterControlRecordImpl(String encoding, int stdLevel) {
+    public X937FileControlRecordImpl(String encoding, int stdLevel) {
         super(encoding, stdLevel);
     }
 
-    public X937CashLetterControlRecordImpl(ByteArray record, int stdLevel) {
+    public X937FileControlRecordImpl(ByteArray record, int stdLevel) {
         super(record, stdLevel);
     }
 
@@ -79,101 +79,92 @@ public class X937CashLetterControlRecordImpl extends X937CashLetterControlRecord
         return fields[fieldNumber];
     }
 
-    public String bundleCount() {
+    public String cashLetterCount() {
         return getFieldAsString(field(2));
     }
 
-    public X937CashLetterControlRecord bundleCount(String value) {
+    public X937FileControlRecord cashLetterCount(String value) {
         setField(value, field(2));
         return this;
     }
 
-    public int bundleCountAsInt() throws InvalidDataException {
+    public int cashLetterCountAsInt() throws InvalidDataException {
         return getFieldAsInt(field(2));
     }
 
-    public X937CashLetterControlRecord bundleCount(int value) {
+    public X937FileControlRecord cashLetterCount(int value) {
         setField(value, field(2));
         return this;
     }
 
-    public String itemsWithinCashLetterCount() {
+    public String totalRecordCount() {
         return getFieldAsString(field(3));
     }
 
-    public X937CashLetterControlRecord itemsWithinCashLetterCount(String value) {
+    public X937FileControlRecord totalRecordCount(String value) {
         setField(value, field(3));
         return this;
     }
 
-    public int itemsWithinCashLetterCountAsInt() throws InvalidDataException {
+    public int totalRecordCountAsInt() throws InvalidDataException {
         return getFieldAsInt(field(3));
     }
 
-    public X937CashLetterControlRecord itemsWithinCashLetterCount(int value) {
+    public X937FileControlRecord totalRecordCount(int value) {
         setField(value, field(3));
         return this;
     }
 
-    public String cashLetterTotalAmount() {
+    public String totalItemCount() {
         return getFieldAsString(field(4));
     }
 
-    public X937CashLetterControlRecord cashLetterTotalAmount(String value) {
+    public X937FileControlRecord totalItemCount(String value) {
         setField(value, field(4));
         return this;
     }
 
-    public long cashLetterTotalAmountAsLong() throws InvalidDataException {
-        return getFieldAsLong(field(4));
+    public int totalItemCountAsInt() throws InvalidDataException {
+        return getFieldAsInt(field(4));
     }
 
-    public X937CashLetterControlRecord cashLetterTotalAmount(long value) {
+    public X937FileControlRecord totalItemCount(int value) {
         setField(value, field(4));
         return this;
     }
 
-    public String imagesWithinCashLetterCount() {
+    public String fileTotalAmount() {
         return getFieldAsString(field(5));
     }
 
-    public X937CashLetterControlRecord imagesWithinCashLetterCount(String value) {
+    public X937FileControlRecord fileTotalAmount(String value) {
         setField(value, field(5));
         return this;
     }
 
-    public long imagesWithinCashLetterCountAsLong() throws InvalidDataException {
+    public long fileTotalAmountAsLong() throws InvalidDataException {
         return getFieldAsLong(field(5));
     }
 
-    public X937CashLetterControlRecord imagesWithinCashLetterCount(long value) {
+    public X937FileControlRecord fileTotalAmount(long value) {
         setField(value, field(5));
         return this;
     }
 
-    public String ECEInstitutionName() {
+    public String immediateOriginContactName() {
         return getFieldAsString(field(6));
     }
 
-    public X937CashLetterControlRecord ECEInstitutionName(String value) {
+    public X937FileControlRecord immediateOriginContactName(String value) {
         setField(value, field(6));
         return this;
     }
 
-    public Date settlementDate() throws InvalidDataException {
-        return getFieldAsDate(field(7), x9TimeZone);
-    }
-
-    public X937CashLetterControlRecord settlementDate(Date value) {
-        setFieldDate(value, field(7), x9TimeZone);
-        return this;
-    }
-
-    public String settlementDateAsString() {
+    public String immediateOriginContactPhoneNumber() {
         return getFieldAsString(field(7));
     }
 
-    public X937CashLetterControlRecord settlementDate(String value) {
+    public X937FileControlRecord immediateOriginContactPhoneNumber(String value) {
         setField(value, field(7));
         return this;
     }
@@ -182,7 +173,7 @@ public class X937CashLetterControlRecordImpl extends X937CashLetterControlRecord
         return getFieldAsString(field(8));
     }
 
-    public X937CashLetterControlRecord reserved(String value) {
+    public X937FileControlRecord reserved(String value) {
         setField(value, field(8));
         return this;
     }

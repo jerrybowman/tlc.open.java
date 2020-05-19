@@ -16,7 +16,7 @@
  * ******************************************************************************
  */
 
-package com.thelastcheck.io.x937.records.stddstu;
+package com.thelastcheck.io.x937.records.std2008;
 
 import java.util.Date;
 
@@ -26,38 +26,39 @@ import com.thelastcheck.commons.base.fields.RoutingNumber;
 import com.thelastcheck.commons.buffer.ByteArray;
 import com.thelastcheck.io.base.Field;
 import com.thelastcheck.io.base.FieldType;
-import com.thelastcheck.io.x937.records.X937BoxSummaryRecord;
-import com.thelastcheck.io.x937.records.base.X937BoxSummaryRecordBase;
+import com.thelastcheck.io.x937.records.X937AccountTotalsDetailRecord;
+import com.thelastcheck.io.x937.records.base.X937AccountTotalsDetailRecordBase;
 
-public class X937BoxSummaryRecordImpl extends X937BoxSummaryRecordBase {
+public class X937AccountTotalsDetailRecordImpl extends X937AccountTotalsDetailRecordBase {
 
-    private static final int maxFieldNumber = 7;
+    private static final int maxFieldNumber = 8;
     private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
         fields[1] = recordTypeField;
         fields[2] = new Field("DestinationRoutingNumber", 2, 2, 9, FieldType.ROUTING_NUMBER);
-        fields[3] = new Field("BoxSequenceNumber", 3, 11, 3, FieldType.STRING);
-        fields[4] = new Field("BoxBundleCount", 4, 14, 4, FieldType.INT);
-        fields[5] = new Field("BoxNumberID", 5, 18, 8, FieldType.STRING);
-        fields[6] = new Field("BoxTotalAmount", 6, 26, 14, FieldType.LONG);
-        fields[7] = new Field("Reserved", 7, 40, 40, FieldType.STRING);
+        fields[3] = new Field("KeyAccountOrLowAccountInKeyAccountRange", 3, 11, 18, FieldType.STRING);
+        fields[4] = new Field("KeyAccountOrHighAccountInKeyAccountRange", 4, 29, 18, FieldType.STRING);
+        fields[5] = new Field("TotalItemCount", 5, 47, 12, FieldType.LONG);
+        fields[6] = new Field("TotalItemAmount", 6, 59, 14, FieldType.LONG);
+        fields[7] = new Field("UserField", 7, 73, 4, FieldType.STRING);
+        fields[8] = new Field("Reserved", 8, 77, 3, FieldType.STRING);
     }
 
-    public X937BoxSummaryRecordImpl() {
+    public X937AccountTotalsDetailRecordImpl() {
         super();
     }
 
-    public X937BoxSummaryRecordImpl(int stdLevel) {
+    public X937AccountTotalsDetailRecordImpl(int stdLevel) {
         super(stdLevel);
     }
 
-    public X937BoxSummaryRecordImpl(String encoding, int stdLevel) {
+    public X937AccountTotalsDetailRecordImpl(String encoding, int stdLevel) {
         super(encoding, stdLevel);
     }
 
-    public X937BoxSummaryRecordImpl(ByteArray record, int stdLevel) {
+    public X937AccountTotalsDetailRecordImpl(ByteArray record, int stdLevel) {
         super(record, stdLevel);
     }
 
@@ -82,7 +83,7 @@ public class X937BoxSummaryRecordImpl extends X937BoxSummaryRecordBase {
         return getFieldAsRoutingNumber(field(2));
     }
 
-    public X937BoxSummaryRecord destinationRoutingNumber(RoutingNumber value) {
+    public X937AccountTotalsDetailRecord destinationRoutingNumber(RoutingNumber value) {
         setField(value, field(2));
         return this;
     }
@@ -91,71 +92,80 @@ public class X937BoxSummaryRecordImpl extends X937BoxSummaryRecordBase {
         return getFieldAsString(field(2));
     }
 
-    public X937BoxSummaryRecord destinationRoutingNumber(String value) {
+    public X937AccountTotalsDetailRecord destinationRoutingNumber(String value) {
         setField(value, field(2));
         return this;
     }
 
-    public String boxSequenceNumber() {
+    public String keyAccountOrLowAccountInKeyAccountRange() {
         return getFieldAsString(field(3));
     }
 
-    public X937BoxSummaryRecord boxSequenceNumber(String value) {
+    public X937AccountTotalsDetailRecord keyAccountOrLowAccountInKeyAccountRange(String value) {
         setField(value, field(3));
         return this;
     }
 
-    public String boxBundleCount() {
+    public String keyAccountOrHighAccountInKeyAccountRange() {
         return getFieldAsString(field(4));
     }
 
-    public X937BoxSummaryRecord boxBundleCount(String value) {
+    public X937AccountTotalsDetailRecord keyAccountOrHighAccountInKeyAccountRange(String value) {
         setField(value, field(4));
         return this;
     }
 
-    public int boxBundleCountAsInt() throws InvalidDataException {
-        return getFieldAsInt(field(4));
-    }
-
-    public X937BoxSummaryRecord boxBundleCount(int value) {
-        setField(value, field(4));
-        return this;
-    }
-
-    public String boxNumberID() {
+    public String totalItemCount() {
         return getFieldAsString(field(5));
     }
 
-    public X937BoxSummaryRecord boxNumberID(String value) {
+    public X937AccountTotalsDetailRecord totalItemCount(String value) {
         setField(value, field(5));
         return this;
     }
 
-    public String boxTotalAmount() {
+    public long totalItemCountAsLong() throws InvalidDataException {
+        return getFieldAsLong(field(5));
+    }
+
+    public X937AccountTotalsDetailRecord totalItemCount(long value) {
+        setField(value, field(5));
+        return this;
+    }
+
+    public String totalItemAmount() {
         return getFieldAsString(field(6));
     }
 
-    public X937BoxSummaryRecord boxTotalAmount(String value) {
+    public X937AccountTotalsDetailRecord totalItemAmount(String value) {
         setField(value, field(6));
         return this;
     }
 
-    public long boxTotalAmountAsLong() throws InvalidDataException {
+    public long totalItemAmountAsLong() throws InvalidDataException {
         return getFieldAsLong(field(6));
     }
 
-    public X937BoxSummaryRecord boxTotalAmount(long value) {
+    public X937AccountTotalsDetailRecord totalItemAmount(long value) {
         setField(value, field(6));
+        return this;
+    }
+
+    public String userField() {
+        return getFieldAsString(field(7));
+    }
+
+    public X937AccountTotalsDetailRecord userField(String value) {
+        setField(value, field(7));
         return this;
     }
 
     public String reserved() {
-        return getFieldAsString(field(7));
+        return getFieldAsString(field(8));
     }
 
-    public X937BoxSummaryRecord reserved(String value) {
-        setField(value, field(7));
+    public X937AccountTotalsDetailRecord reserved(String value) {
+        setField(value, field(8));
         return this;
     }
 

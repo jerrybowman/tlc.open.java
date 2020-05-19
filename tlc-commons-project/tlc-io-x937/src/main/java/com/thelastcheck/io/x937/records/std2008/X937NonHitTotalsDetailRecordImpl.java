@@ -16,7 +16,7 @@
  * ******************************************************************************
  */
 
-package com.thelastcheck.io.x937.records.stddstu;
+package com.thelastcheck.io.x937.records.std2008;
 
 import java.util.Date;
 
@@ -26,39 +26,38 @@ import com.thelastcheck.commons.base.fields.RoutingNumber;
 import com.thelastcheck.commons.buffer.ByteArray;
 import com.thelastcheck.io.base.Field;
 import com.thelastcheck.io.base.FieldType;
-import com.thelastcheck.io.x937.records.X937FileControlRecord;
-import com.thelastcheck.io.x937.records.base.X937FileControlRecordBase;
+import com.thelastcheck.io.x937.records.X937NonHitTotalsDetailRecord;
+import com.thelastcheck.io.x937.records.base.X937NonHitTotalsDetailRecordBase;
 
-public class X937FileControlRecordImpl extends X937FileControlRecordBase {
+public class X937NonHitTotalsDetailRecordImpl extends X937NonHitTotalsDetailRecordBase {
 
-    private static final int maxFieldNumber = 8;
+    private static final int maxFieldNumber = 7;
     private static final Field[] fields = new Field[maxFieldNumber+1];
 
     static {
         fields[0] = null;
         fields[1] = recordTypeField;
-        fields[2] = new Field("CashLetterCount", 2, 2, 6, FieldType.INT);
-        fields[3] = new Field("TotalRecordCount", 3, 8, 8, FieldType.INT);
-        fields[4] = new Field("TotalItemCount", 4, 16, 8, FieldType.INT);
-        fields[5] = new Field("FileTotalAmount", 5, 24, 16, FieldType.LONG);
-        fields[6] = new Field("ImmediateOriginContactName", 6, 40, 14, FieldType.STRING);
-        fields[7] = new Field("ImmediateOriginContactPhoneNumber", 7, 54, 10, FieldType.STRING);
-        fields[8] = new Field("Reserved", 8, 64, 16, FieldType.STRING);
+        fields[2] = new Field("DestinationRoutingNumber", 2, 2, 9, FieldType.ROUTING_NUMBER);
+        fields[3] = new Field("NonHitIndicator", 3, 11, 1, FieldType.STRING);
+        fields[4] = new Field("TotalItemCount", 4, 12, 12, FieldType.LONG);
+        fields[5] = new Field("TotalItemAmount", 5, 24, 14, FieldType.LONG);
+        fields[6] = new Field("UserField", 6, 38, 12, FieldType.STRING);
+        fields[7] = new Field("Reserved", 7, 50, 30, FieldType.STRING);
     }
 
-    public X937FileControlRecordImpl() {
+    public X937NonHitTotalsDetailRecordImpl() {
         super();
     }
 
-    public X937FileControlRecordImpl(int stdLevel) {
+    public X937NonHitTotalsDetailRecordImpl(int stdLevel) {
         super(stdLevel);
     }
 
-    public X937FileControlRecordImpl(String encoding, int stdLevel) {
+    public X937NonHitTotalsDetailRecordImpl(String encoding, int stdLevel) {
         super(encoding, stdLevel);
     }
 
-    public X937FileControlRecordImpl(ByteArray record, int stdLevel) {
+    public X937NonHitTotalsDetailRecordImpl(ByteArray record, int stdLevel) {
         super(record, stdLevel);
     }
 
@@ -79,38 +78,29 @@ public class X937FileControlRecordImpl extends X937FileControlRecordBase {
         return fields[fieldNumber];
     }
 
-    public String cashLetterCount() {
+    public RoutingNumber destinationRoutingNumber() {
+        return getFieldAsRoutingNumber(field(2));
+    }
+
+    public X937NonHitTotalsDetailRecord destinationRoutingNumber(RoutingNumber value) {
+        setField(value, field(2));
+        return this;
+    }
+
+    public String destinationRoutingNumberAsString() {
         return getFieldAsString(field(2));
     }
 
-    public X937FileControlRecord cashLetterCount(String value) {
+    public X937NonHitTotalsDetailRecord destinationRoutingNumber(String value) {
         setField(value, field(2));
         return this;
     }
 
-    public int cashLetterCountAsInt() throws InvalidDataException {
-        return getFieldAsInt(field(2));
-    }
-
-    public X937FileControlRecord cashLetterCount(int value) {
-        setField(value, field(2));
-        return this;
-    }
-
-    public String totalRecordCount() {
+    public String nonHitIndicator() {
         return getFieldAsString(field(3));
     }
 
-    public X937FileControlRecord totalRecordCount(String value) {
-        setField(value, field(3));
-        return this;
-    }
-
-    public int totalRecordCountAsInt() throws InvalidDataException {
-        return getFieldAsInt(field(3));
-    }
-
-    public X937FileControlRecord totalRecordCount(int value) {
+    public X937NonHitTotalsDetailRecord nonHitIndicator(String value) {
         setField(value, field(3));
         return this;
     }
@@ -119,62 +109,53 @@ public class X937FileControlRecordImpl extends X937FileControlRecordBase {
         return getFieldAsString(field(4));
     }
 
-    public X937FileControlRecord totalItemCount(String value) {
+    public X937NonHitTotalsDetailRecord totalItemCount(String value) {
         setField(value, field(4));
         return this;
     }
 
-    public int totalItemCountAsInt() throws InvalidDataException {
-        return getFieldAsInt(field(4));
+    public long totalItemCountAsLong() throws InvalidDataException {
+        return getFieldAsLong(field(4));
     }
 
-    public X937FileControlRecord totalItemCount(int value) {
+    public X937NonHitTotalsDetailRecord totalItemCount(long value) {
         setField(value, field(4));
         return this;
     }
 
-    public String fileTotalAmount() {
+    public String totalItemAmount() {
         return getFieldAsString(field(5));
     }
 
-    public X937FileControlRecord fileTotalAmount(String value) {
+    public X937NonHitTotalsDetailRecord totalItemAmount(String value) {
         setField(value, field(5));
         return this;
     }
 
-    public long fileTotalAmountAsLong() throws InvalidDataException {
+    public long totalItemAmountAsLong() throws InvalidDataException {
         return getFieldAsLong(field(5));
     }
 
-    public X937FileControlRecord fileTotalAmount(long value) {
+    public X937NonHitTotalsDetailRecord totalItemAmount(long value) {
         setField(value, field(5));
         return this;
     }
 
-    public String immediateOriginContactName() {
+    public String userField() {
         return getFieldAsString(field(6));
     }
 
-    public X937FileControlRecord immediateOriginContactName(String value) {
+    public X937NonHitTotalsDetailRecord userField(String value) {
         setField(value, field(6));
         return this;
     }
 
-    public String immediateOriginContactPhoneNumber() {
+    public String reserved() {
         return getFieldAsString(field(7));
     }
 
-    public X937FileControlRecord immediateOriginContactPhoneNumber(String value) {
+    public X937NonHitTotalsDetailRecord reserved(String value) {
         setField(value, field(7));
-        return this;
-    }
-
-    public String reserved() {
-        return getFieldAsString(field(8));
-    }
-
-    public X937FileControlRecord reserved(String value) {
-        setField(value, field(8));
         return this;
     }
 
