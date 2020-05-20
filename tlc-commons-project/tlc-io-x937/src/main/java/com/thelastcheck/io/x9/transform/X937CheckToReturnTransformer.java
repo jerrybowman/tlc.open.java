@@ -22,11 +22,11 @@ import com.thelastcheck.io.x9.factory.X9RecordFactory;
 import com.thelastcheck.io.x937.records.X937CheckDetailRecord;
 import com.thelastcheck.io.x937.records.X937ReturnRecord;
 
-public class X937ChecktoReturnTransformer extends X9Transformer<X937CheckDetailRecord, X937ReturnRecord> {
+public class X937CheckToReturnTransformer extends X9Transformer<X937CheckDetailRecord, X937ReturnRecord> {
 
 	private String	forwardBundleDate;
 
-	public X937ChecktoReturnTransformer(X9RecordFactory factory, String forwardBundleDate) {
+	public X937CheckToReturnTransformer(X9RecordFactory factory, String forwardBundleDate) {
 		super(factory);
 		this.forwardBundleDate = forwardBundleDate == null ? "" : forwardBundleDate;
 	}

@@ -1,6 +1,6 @@
 package com.thelastcheck.commons.buffer;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -20,14 +20,14 @@ public class ByteArrayWriterTest {
     private void write(ByteArray ba) throws IOException {
         ByteArrayWriter writer = new ByteArrayWriter(ba);
         
-        writer.write(new String("ABCDEFG1234").toCharArray());
-        writer.write(new String("ABCDEFG1234").toCharArray());
-        writer.write(new String("BIG TEST FOR SIZE AND ALLOCATION").toCharArray());
+        writer.write("ABCDEFG1234".toCharArray());
+        writer.write("ABCDEFG1234".toCharArray());
+        writer.write("BIG TEST FOR SIZE AND ALLOCATION".toCharArray());
         writer.write('a');
         writer.write("STRING");
         writer.close();
-        
-        assertTrue(writer.getTotalBytesWritten() == 61);
+
+        assertEquals(61, writer.getTotalBytesWritten());
         
         ByteArrayDumpFormatter.dumpByteArray("test", writer.getBuffer());
         ByteArrayDumpFormatter.dumpByteArray("orig", ba);

@@ -21,10 +21,10 @@ import com.thelastcheck.io.x9.factory.X9RecordFactory;
 import com.thelastcheck.io.x937.records.X937CheckDetailRecord;
 import com.thelastcheck.io.x937.records.X937ReturnAddendumBRecord;
 
-public class X937ChecktoReturnAddendumBTransformer extends
+public class X937CheckToReturnAddendumBTransformer extends
 		X9Transformer<X937CheckDetailRecord, X937ReturnAddendumBRecord> {
 
-	public X937ChecktoReturnAddendumBTransformer(X9RecordFactory factory) {
+	public X937CheckToReturnAddendumBTransformer(X9RecordFactory factory) {
 		super(factory);
 	}
 

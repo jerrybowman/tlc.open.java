@@ -1,18 +1,18 @@
-/**
+/*
  * ****************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  * ****************************************************************************
  */
 
@@ -20,7 +20,10 @@ package com.thelastcheck.commons.base.fields;
 
 public class OnUsField {
 
-    public static final String STRING_20 = "                    ";
+    private static final String STRING_20 = "                    ";
+    private static final String EMPTY_STRING = "";
+    private static final char ONUS_FIELD_SEPARATOR = '/';
+    private static final int MAX_ONUS_FIELD_LENGTH = 20;
 
     private String optionalField4;
     private String accountNumber;
@@ -47,10 +50,10 @@ public class OnUsField {
     }
 
     private void parse(String value) {
-        optionalField4 = "";
-        accountNumber = "";
-        tranCode = "";
-        int token = value.lastIndexOf('/');
+        optionalField4 = EMPTY_STRING;
+        accountNumber = EMPTY_STRING;
+        tranCode = EMPTY_STRING;
+        int token = value.lastIndexOf(ONUS_FIELD_SEPARATOR);
         if (token == -1) {
             tranCode = value.trim();
             return;
@@ -66,23 +69,14 @@ public class OnUsField {
         accountNumber = value.substring(token + 1).trim();
     }
 
-    /**
-     * @return the optionalField4
-     */
     public String getOptionalField4() {
         return optionalField4;
     }
 
-    /**
-     * @return the accountNumber
-     */
     public String getAccountNumber() {
         return accountNumber;
     }
 
-    /**
-     * @return the tranCode
-     */
     public String getTranCode() {
         return tranCode;
     }
@@ -94,23 +88,21 @@ public class OnUsField {
         }
         if (anObject instanceof OnUsField) {
             OnUsField anOnUsField = (OnUsField) anObject;
-            if (this.optionalField4.equals(anOnUsField.optionalField4)
+            return this.optionalField4.equals(anOnUsField.optionalField4)
                     && this.accountNumber.equals(anOnUsField.accountNumber)
-                    && this.tranCode.equals(anOnUsField.tranCode)) {
-                return true;
-            }
+                    && this.tranCode.equals(anOnUsField.tranCode);
         }
         return false;
     }
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer(20);
-        if (optionalField4.length() > 0) {
+        StringBuilder sb = new StringBuilder(MAX_ONUS_FIELD_LENGTH);
+        if (!optionalField4.isEmpty()) {
             sb.append(optionalField4);
             sb.append("/");
         }
-        if (accountNumber.length() > 0) {
+        if (!accountNumber.isEmpty()) {
             sb.append(accountNumber);
             sb.append("/");
         } else {
@@ -118,16 +110,16 @@ public class OnUsField {
                 sb.append("/");
             }
         }
-        if (tranCode.length() > 0) {
+        if (!tranCode.isEmpty()) {
             sb.append(tranCode);
         }
-        String s = sb.toString();
-        if (s.length() > 20) {
-            s = s.substring(s.length() - 20);
+        String onusField = sb.toString();
+        if (onusField.length() > MAX_ONUS_FIELD_LENGTH) {
+            onusField = onusField.substring(onusField.length() - MAX_ONUS_FIELD_LENGTH);
         }
-        if (s.length() < 20) {
-            s = STRING_20.substring(0, 20 - s.length()) + s;
+        if (onusField.length() < MAX_ONUS_FIELD_LENGTH) {
+            onusField = STRING_20.substring(0, MAX_ONUS_FIELD_LENGTH - onusField.length()) + onusField;
         }
-        return s;
+        return onusField;
     }
 }

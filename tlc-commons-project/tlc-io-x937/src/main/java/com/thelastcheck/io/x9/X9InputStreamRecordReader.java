@@ -56,8 +56,8 @@ public class X9InputStreamRecordReader extends InputStreamRecordReader {
         this(inputStream, null);
     }
 
-    public X9InputStreamRecordReader(InputStream inputStream, boolean skipInvolidRecords) {
-        this(inputStream, null, skipInvolidRecords);
+    public X9InputStreamRecordReader(InputStream inputStream, boolean skipInvalidRecords) {
+        this(inputStream, null, skipInvalidRecords);
     }
 
     /**
@@ -118,7 +118,7 @@ public class X9InputStreamRecordReader extends InputStreamRecordReader {
 
     /**
      * This method reads the first record from the file which should be a file
-     * header record. Specail processing of the record is done to determine
+     * header record. Special processing of the record is done to determine
      * certain format characteristics of the file, like standard level,
      * encoding, variable length records, etc.
      *

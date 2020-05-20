@@ -1,25 +1,28 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.commons.base.fields;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.thelastcheck.commons.base.utils.CheckDigitVerifier;
 import com.thelastcheck.commons.base.utils.CheckDigitVerifiers;
-
-import static com.thelastcheck.commons.base.utils.CheckDigitVerifiers.Verifier.*;
+import com.thelastcheck.commons.base.utils.CheckDigitVerifiers.Verifier;
 
 public class RoutingNumber {
 
@@ -81,20 +84,15 @@ public class RoutingNumber {
             if (number.charAt(5) == '-') {
                 canadian = true;
             }
-            StringBuilder sb = new StringBuilder(9);
-            for (Character ch: number.toCharArray()) {
-                if (ch != '-') sb.append(ch);
-            }
-            number = sb.toString();
+            number = StringUtils.remove(number, '-');
         }
         return number;
     }
 
-    private static int[] weights = {3, 7, 1, 3, 7, 1, 3, 7, 1};
+    private static final int[] weights = {3, 7, 1, 3, 7, 1, 3, 7, 1};
 
     public void calculateAndSaveCheckDigit() {
         checkDigit = calculateCheckDigit(routingNumber).charAt(0);
-        return;
     }
 
     public static String calculateCheckDigit(String routingNumber) {
@@ -114,27 +112,26 @@ public class RoutingNumber {
             }
         }
         if (valid) {
-            // If remainder is 0m then that is the check digit.
+            // If remainder is 0 then that is the check digit.
             int checkDigit = sum % 10;
             if (checkDigit > 0) {
                 checkDigit = 10 - checkDigit;
             }
-            String s = "" + checkDigit;
-            return s;
+            return "" + checkDigit;
         }
         return " ";
     }
 
     public boolean isValid() {
         if (hasCheckDigit()) {
-            CheckDigitVerifier verifier = CheckDigitVerifiers.getVerifier(RoutingNumber);
+            CheckDigitVerifier verifier = CheckDigitVerifiers.getVerifier(Verifier.RoutingNumber);
             return verifier.isValid(this.toString());
         }
         return isValidNumber();
     }
 
     private boolean isValidNumber() {
-        if (routingNumber.length() == 0) return true;
+        if (routingNumber.isEmpty()) return true;
         for (char c : routingNumber.toCharArray()) {
             if (!Character.isDigit(c)) {
                 return false;
@@ -150,9 +147,7 @@ public class RoutingNumber {
         }
         if (anObject instanceof RoutingNumber) {
             RoutingNumber aRoutingNumber = (RoutingNumber) anObject;
-            if (this.routingNumber.equals(aRoutingNumber.routingNumber)) {
-                return true;
-            }
+            return this.routingNumber.equals(aRoutingNumber.routingNumber);
         }
         return false;
     }

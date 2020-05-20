@@ -1,3 +1,21 @@
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.thelastcheck.commons.base.fields;
 
 import org.junit.Before;
@@ -15,28 +33,28 @@ public class OnUsFieldTest {
     }
 
     @Test
-    public void testGetOptionalField4() throws Exception {
+    public void testGetOptionalField4() {
         assertEquals("", testField.getOptionalField4());
     }
 
     @Test
-    public void testGetAccountNumber() throws Exception {
+    public void testGetAccountNumber() {
         assertEquals("12345", testField.getAccountNumber());
     }
 
     @Test
-    public void testGetTranCode() throws Exception {
+    public void testGetTranCode() {
         assertEquals("20", testField.getTranCode());
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         OnUsField f = new OnUsField("", "12345", "20");
         assertEquals(f, testField);
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         assertEquals("            12345/20", testField.toString());
     }
 }

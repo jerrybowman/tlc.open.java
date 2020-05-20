@@ -1,6 +1,10 @@
 package com.thelastcheck.commons.buffer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.nio.ByteBuffer;
@@ -15,7 +19,7 @@ public class ByteArrayTest {
     @Test
     public void testByteArrayInt() {
         byteArray = new ByteArray(200);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
     }
 
     @Test
@@ -23,7 +27,7 @@ public class ByteArrayTest {
         byteArray = ByteArray.valueOf("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         ByteArray ba = byteArray.slice(10, 10);
         String s = ba.readAsString();
-        assertTrue("KLMNOPQRST".equals(s));
+        assertEquals("KLMNOPQRST", s);
         dumpBuffer("sliceBefore", byteArray.getBuffer());
         dumpBuffer("sliceAfter ", ba.getBuffer());
         ByteArrayDumpFormatter.dumpByteArray("sliceBefore", byteArray);
@@ -44,64 +48,64 @@ public class ByteArrayTest {
     @Test
     public void testByteArrayIntString() {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
         byteArray.write(" ", 0);
-        assertTrue((byteArray.getArray().value[0] & 0x00ff) == 0x40);
+        assertEquals(0x40, (byteArray.getArray().value[0] & 0x00ff));
 
         byteArray = new ByteArray(200, ByteArray.ASCII_CHARSET_NAME);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
         byteArray.write(" ", 0);
-        assertTrue((byteArray.getArray().value[0] & 0x00ff) == 0x20);
+        assertEquals(0x20, (byteArray.getArray().value[0] & 0x00ff));
     }
 
     @Test
     public void testByteArrayByteArray() {
         byte[] bytes = new byte[200];
         byteArray = new ByteArray(bytes);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
     }
 
     @Test
     public void testByteArrayByteArrayString() {
         byte[] bytes = new byte[200];
         byteArray = new ByteArray(bytes, ByteArray.EBCDIC_CHARSET_NAME);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
         byteArray.write(" ", 0);
-        assertTrue((byteArray.getArray().value[0] & 0x00ff) == 0x40);
+        assertEquals(0x40, (byteArray.getArray().value[0] & 0x00ff));
 
         byteArray = new ByteArray(bytes, ByteArray.ASCII_CHARSET_NAME);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
         byteArray.write(" ", 0);
-        assertTrue((byteArray.getArray().value[0] & 0x00ff) == 0x20);
+        assertEquals(0x20, (byteArray.getArray().value[0] & 0x00ff));
     }
 
     @Test
     public void testByteArrayByteArray1() {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
-        assertTrue(byteArray.getLength() == 200);
+        assertEquals(200, byteArray.getLength());
         byteArray.write(" ", 0);
 
         ByteArray byteArray2 = new ByteArray(byteArray);
-        assertTrue((byteArray2.getArray().value[0] & 0x00ff) == 0x40);
-        assertTrue(byteArray.equals(byteArray2));
-        assertTrue(byteArray.getArray().value == byteArray2.getArray().value);
+        assertEquals(0x40, (byteArray2.getArray().value[0] & 0x00ff));
+        assertEquals(byteArray, byteArray2);
+        assertSame(byteArray.getArray().value, byteArray2.getArray().value);
     }
 
     @Test
     public void testClone() throws CloneNotSupportedException {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
-        byteArray.write((int) 10, 0); 
+        byteArray.write(10, 0);
         byteArray.write((long) 33333, 4); 
         byteArray.write("TESTTESTTEST", 12); 
         ByteArray byteArrayClone = (ByteArray) byteArray.clone();
-        assertTrue(byteArray.equals(byteArrayClone));
-        assertTrue(byteArray.getArray().value!= byteArrayClone.getArray().value);
-        assertTrue(byteArray.getLength() == byteArrayClone.getLength());
-        assertTrue(byteArray.getEncoding().equals(byteArrayClone.getEncoding()));
-        assertTrue(byteArray.getOrder() == byteArrayClone.getOrder());
+        assertEquals(byteArray, byteArrayClone);
+        assertNotSame(byteArray.getArray().value, byteArrayClone.getArray().value);
+        assertEquals(byteArray.getLength(), byteArrayClone.getLength());
+        assertEquals(byteArray.getEncoding(), byteArrayClone.getEncoding());
+        assertSame(byteArray.getOrder(), byteArrayClone.getOrder());
         String s1 = byteArray.readPns(0, 200);
         String s2 = byteArrayClone.readPns(0, 200);
-        assertTrue(s1.equals(s2));
+        assertEquals(s1, s2);
     }
 
     @Test
@@ -112,7 +116,7 @@ public class ByteArrayTest {
         byteArray.write(value, 20);
         ByteArray bytes1 = byteArray.readAsByteArray(0, 5);
         ByteArray bytes2 = byteArray.readAsByteArray(20, 5);
-        assertTrue(bytes1.equals(bytes2));
+        assertEquals(bytes1, bytes2);
     }
 
     @Test
@@ -125,7 +129,7 @@ public class ByteArrayTest {
         byte[] bytes1 = byteArray.read(0, 5);
         byte[] bytes2 = byteArray.read(20, 5);
         for (int i = 0; i < bytes2.length; i++) {
-            assertTrue(bytes1[i] == bytes2[i]);
+            assertEquals(bytes1[i], bytes2[i]);
         }
     }
 
@@ -141,7 +145,7 @@ public class ByteArrayTest {
         }
         ByteArray testBA = new ByteArray(bytes);
         String value = testBA.readPns(0, 5, false);
-        assertTrue(value.equals("0045535400"));
+        assertEquals("0045535400", value);
         ByteArrayDumpFormatter.dumpByteArray("testReadIntCharArrayIntInt", bytes);
         ByteArrayDumpFormatter.dumpByteArray("testReadIntCharArrayIntIntBA", byteArray);
     }
@@ -154,7 +158,7 @@ public class ByteArrayTest {
         byteArray.read(11, bytes, 1, 3);
         ByteArray testBA = new ByteArray(bytes);
         String value = testBA.readPns(0, 5, false);
-        assertTrue(value.equals("00C5E2E300"));
+        assertEquals("00C5E2E300", value);
         ByteArrayDumpFormatter.dumpByteArray("testReadIntByteArrayIntInt", bytes);
         ByteArrayDumpFormatter.dumpByteArray("testReadIntByteArrayIntIntBA", byteArray);
     }
@@ -164,12 +168,12 @@ public class ByteArrayTest {
         byteArray = new ByteArray(20, ByteArray.EBCDIC_CHARSET_NAME);
         byteArray.write("TEST", 0);
         char[] value = byteArray.readAsCharArray(0, 4);
-        assertTrue(value.length == 4);
+        assertEquals(4, value.length);
         // char[] test = { 0x00E3, 0x00C5, 0x00E2, 0x00E3 };
-        char[] test = new String("TEST").toCharArray();
+        char[] test = "TEST".toCharArray();
         ByteArrayDumpFormatter.dumpByteArray("TEST", byteArray.getArray().value);
         for (int i = 0; i < test.length; i++) {
-            assertTrue(test[i] == (value[i] & 0x00ff));
+            assertEquals(test[i], (value[i] & 0x00ff));
         }
     }
 
@@ -178,16 +182,16 @@ public class ByteArrayTest {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
         byteArray.write("TEST", 0);
         String value = byteArray.readAsString();
-        assertTrue(value.length() == 200);
-        assertFalse("TEST".equals(value));
-        assertTrue("TEST".equals(value.substring(0, 4)));
+        assertEquals(200, value.length());
+        assertNotEquals("TEST", value);
+        assertEquals("TEST", value.substring(0, 4));
 
         byteArray = new ByteArray(200, ByteArray.ASCII_CHARSET_NAME);
         byteArray.write("TEST", 0);
         value = byteArray.readAsString();
-        assertTrue(value.length() == 200);
-        assertFalse("TEST".equals(value));
-        assertTrue("TEST".equals(value.substring(0, 4)));
+        assertEquals(200, value.length());
+        assertNotEquals("TEST", value);
+        assertEquals("TEST", value.substring(0, 4));
     }
 
     @Test
@@ -195,18 +199,18 @@ public class ByteArrayTest {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
         byteArray.write("TEST", 0);
         String value = byteArray.readAsString(1);
-        assertTrue(value.length() == 199);
-        assertFalse("TEST".equals(value));
-        assertFalse("EST".equals(value));
-        assertTrue("EST".equals(value.substring(0, 3)));
+        assertEquals(199, value.length());
+        assertNotEquals("TEST", value);
+        assertNotEquals("EST", value);
+        assertEquals("EST", value.substring(0, 3));
 
         byteArray = new ByteArray(200, ByteArray.ASCII_CHARSET_NAME);
         byteArray.write("TEST", 0);
         value = byteArray.readAsString(1);
-        assertTrue(value.length() == 199);
-        assertFalse("TEST".equals(value));
-        assertFalse("EST".equals(value));
-        assertTrue("EST".equals(value.substring(0, 3)));
+        assertEquals(199, value.length());
+        assertNotEquals("TEST", value);
+        assertNotEquals("EST", value);
+        assertEquals("EST", value.substring(0, 3));
     }
 
     @Test
@@ -214,14 +218,14 @@ public class ByteArrayTest {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
         byteArray.write("TEST", 0);
         String value = byteArray.readAsString(0, 4);
-        assertTrue(value.length() == 4);
-        assertTrue("TEST".equals(value));
+        assertEquals(4, value.length());
+        assertEquals("TEST", value);
 
         byteArray = new ByteArray(200, ByteArray.ASCII_CHARSET_NAME);
         byteArray.write("TEST", 0);
         value = byteArray.readAsString(0, 4);
-        assertTrue(value.length() == 4);
-        assertTrue("TEST".equals(value));
+        assertEquals(4, value.length());
+        assertEquals("TEST", value);
     }
 
     @Test
@@ -229,17 +233,17 @@ public class ByteArrayTest {
         byteArray = new ByteArray(200, ByteArray.EBCDIC_CHARSET_NAME);
         byteArray.write("TEST", 0);
         String value = byteArray.readAsString(0, 8, true);
-        assertTrue(value.length() == 4);
-        assertTrue("TEST".equals(value));
+        assertEquals(4, value.length());
+        assertEquals("TEST", value);
 
         byteArray = new ByteArray(200, ByteArray.ASCII_CHARSET_NAME);
         byteArray.write("TEST", 0);
         value = byteArray.readAsString(0, 8, true);
-        assertTrue(value.length() == 4);
-        assertTrue("TEST".equals(value));
+        assertEquals(4, value.length());
+        assertEquals("TEST", value);
         value = byteArray.readAsString(0, 8, false);
-        assertTrue(value.length() == 8);
-        assertFalse("TEST".equals(value));
+        assertEquals(8, value.length());
+        assertNotEquals("TEST", value);
     }
 
     @Test
@@ -300,7 +304,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10);
         byteArray.write(1.5, 0);
         double d = byteArray.readAsDouble(0);
-        assertTrue(d == 1.5);
+        assertEquals(1.5, d, 0.0);
         ByteArrayDumpFormatter.dumpByteArray("readAsDouble", byteArray);
     }
 
@@ -309,7 +313,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10, ByteOrder.LITTLE_ENDIAN);
         byteArray.write(1.5, 0);
         double d = byteArray.readAsDouble(0);
-        assertTrue(d == 1.5);
+        assertEquals(1.5, d, 0.0);
         ByteArrayDumpFormatter.dumpByteArray("readSwappedAsDouble", byteArray);
     }
 
@@ -318,7 +322,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10);
         byteArray.write(15, 0);
         int i = byteArray.readAsInt(0);
-        assertTrue(i == 15);
+        assertEquals(15, i);
         ByteArrayDumpFormatter.dumpByteArray("readAsInt", byteArray);
     }
 
@@ -327,7 +331,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10, ByteOrder.LITTLE_ENDIAN);
         byteArray.write(15, 2);
         int i = byteArray.readAsInt(2);
-        assertTrue(i == 15);
+        assertEquals(15, i);
         ByteArrayDumpFormatter.dumpByteArray("readSwappedAsInt", byteArray);
     }
 
@@ -336,7 +340,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10);
         byteArray.write((long) 15, 2);
         long i = byteArray.readAsLong(2);
-        assertTrue(i == 15);
+        assertEquals(15, i);
         ByteArrayDumpFormatter.dumpByteArray("readAsLong", byteArray);
     }
 
@@ -345,7 +349,7 @@ public class ByteArrayTest {
         byteArray = new ByteArray(10, ByteOrder.LITTLE_ENDIAN);
         byteArray.write((long) 15, 2);
         long i = byteArray.readAsLong(2);
-        assertTrue(i == 15);
+        assertEquals(15, i);
         ByteArrayDumpFormatter.dumpByteArray("readSwappedAsLong", byteArray);
     }
 
@@ -354,11 +358,11 @@ public class ByteArrayTest {
         byteArray = new ByteArray(20);
         byteArray.writeAsPns("1234-5", 0, 4);
         String value = byteArray.readPns(0, 4);
-        assertTrue(value.equals("AA1234D5"));
+        assertEquals("AA1234D5", value);
         byte[] test = { (byte) 0xAA, (byte) 0x12, (byte) 0x34, (byte) 0xD5 };
         byte[] bytes = byteArray.getArray().value;
         for (int i = 0; i < test.length; i++) {
-            assertTrue(test[i] == bytes[i]);
+            assertEquals(test[i], bytes[i]);
         }
     }
 
@@ -367,9 +371,9 @@ public class ByteArrayTest {
         byteArray = new ByteArray(20);
         byteArray.writeAsPns("1-2345", 4, 5);
         String value = byteArray.readPns(4, 5, false);
-        assertTrue(value.equals("AAAA1D2345"));
+        assertEquals("AAAA1D2345", value);
         value = byteArray.readPns(4, 5, true);
-        assertTrue(value.equals("    1-2345"));
+        assertEquals("    1-2345", value);
     }
 
     @Test
@@ -378,7 +382,7 @@ public class ByteArrayTest {
         byteArray.fill((byte) 0xee);
         ByteArrayDumpFormatter.dumpByteArray("fill", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("EEEEEEEEEEEEEEEEEEEE"));
+        assertEquals("EEEEEEEEEEEEEEEEEEEE", value);
     }
 
     @Test
@@ -387,7 +391,7 @@ public class ByteArrayTest {
         byteArray.fill((byte) 0xee, 1, 8);
         ByteArrayDumpFormatter.dumpByteArray("fill 1 8", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("00EEEEEEEEEEEEEEEE00"));
+        assertEquals("00EEEEEEEEEEEEEEEE00", value);
     }
 
     @Test
@@ -397,7 +401,7 @@ public class ByteArrayTest {
         byteArray.write(charArray, 1);
         ByteArrayDumpFormatter.dumpByteArray("WriteCharArrayInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("00616263000000000000"));
+        assertEquals("00616263000000000000", value);
     }
 
     @Test
@@ -409,7 +413,7 @@ public class ByteArrayTest {
         byteArray.write(ba, 1, 5);
         ByteArrayDumpFormatter.dumpByteArray("WriteByteArrayIntInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("AA5445535400AAAAAAAA"));
+        assertEquals("AA5445535400AAAAAAAA", value);
     }
 
     @Test
@@ -421,7 +425,7 @@ public class ByteArrayTest {
         byteArray.write(ba, 1);
         ByteArrayDumpFormatter.dumpByteArray("fWriteByteArrayInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("BB5445535400000000BB"));
+        assertEquals("BB5445535400000000BB", value);
     }
 
     @Test
@@ -431,7 +435,7 @@ public class ByteArrayTest {
         byteArray.write("TEST", 1);
         ByteArrayDumpFormatter.dumpByteArray("WriteStringInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("BB54455354BBBBBBBBBB"));
+        assertEquals("BB54455354BBBBBBBBBB", value);
     }
 
     @Test
@@ -441,7 +445,7 @@ public class ByteArrayTest {
         byteArray.write("TES", 7, 3);
         ByteArrayDumpFormatter.dumpByteArray("WriteStringIntInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("BBBBBBBBBBBBBB544553"));
+        assertEquals("BBBBBBBBBBBBBB544553", value);
     }
 
     @Test
@@ -451,34 +455,34 @@ public class ByteArrayTest {
         byteArray.write("TEST", 5, 5, true);
         ByteArrayDumpFormatter.dumpByteArray("WriteStringIntIntBooleanTrue", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("BBBBBBBBBB5445535400"));
+        assertEquals("BBBBBBBBBB5445535400", value);
 
         byteArray.fill((byte) 0xBB);
         byteArray.write("TEST", 5, 5, false);
         ByteArrayDumpFormatter.dumpByteArray("WriteStringIntIntBooleanFalse", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("BBBBBBBBBB5445535420"));
+        assertEquals("BBBBBBBBBB5445535420", value);
     }
 
     @Test
     public void testWriteIntInt() {
         byteArray = new ByteArray(10);
         byteArray.fill((byte) 0xBB);
-        byteArray.write((int) 123, 0);
-        byteArray.write((int) 255, 6);
+        byteArray.write(123, 0);
+        byteArray.write(255, 6);
         ByteArrayDumpFormatter.dumpByteArray("WriteIntInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("0000007BBBBB000000FF"));
+        assertEquals("0000007BBBBB000000FF", value);
     }
 
     @Test
     public void testWriteSwappedIntInt() {
         byteArray = new ByteArray(10, ByteOrder.LITTLE_ENDIAN);
         byteArray.fill((byte) 0xBB);
-        byteArray.write((int) 123, 0);
+        byteArray.write(123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteSwappedIntInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("7B000000BBBBBBBBBBBB"));
+        assertEquals("7B000000BBBBBBBBBBBB", value);
     }
 
     @Test
@@ -488,7 +492,7 @@ public class ByteArrayTest {
         byteArray.write((long) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteLongInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("000000000000007BBBBB"));
+        assertEquals("000000000000007BBBBB", value);
     }
 
     @Test
@@ -498,7 +502,7 @@ public class ByteArrayTest {
         byteArray.write((long) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteSwappedLongInt", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("7B00000000000000BBBB"));
+        assertEquals("7B00000000000000BBBB", value);
     }
 
     @Test
@@ -508,9 +512,9 @@ public class ByteArrayTest {
         byteArray.write((float) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteFloatInt", byteArray);
         float f = byteArray.readAsFloat(0);
-        assertTrue(f == 123.0);
+        assertEquals(123.0, f, 0.0);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("42F60000BBBBBBBBBBBB"));
+        assertEquals("42F60000BBBBBBBBBBBB", value);
     }
 
     @Test
@@ -520,9 +524,9 @@ public class ByteArrayTest {
         byteArray.write((float) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteSwappedFloatInt", byteArray);
         float f = byteArray.readAsFloat(0);
-        assertTrue(f == 123.0);
+        assertEquals(123.0, f, 0.0);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("0000F642BBBBBBBBBBBB"));
+        assertEquals("0000F642BBBBBBBBBBBB", value);
     }
 
     @Test
@@ -532,9 +536,9 @@ public class ByteArrayTest {
         byteArray.write((double) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteDoubleInt", byteArray);
         double d = byteArray.readAsDouble(0);
-        assertTrue(d == 123.0);
+        assertEquals(123.0, d, 0.0);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("405EC00000000000BBBB"));
+        assertEquals("405EC00000000000BBBB", value);
     }
 
     @Test
@@ -544,9 +548,9 @@ public class ByteArrayTest {
         byteArray.write((double) 123, 0);
         ByteArrayDumpFormatter.dumpByteArray("testWriteSwappedDoubleInt", byteArray);
         double d = byteArray.readAsDouble(0);
-        assertTrue(d == 123.0);
+        assertEquals(123.0, d, 0.0);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("0000000000C05E40BBBB"));
+        assertEquals("0000000000C05E40BBBB", value);
     }
 
     @Test
@@ -557,22 +561,22 @@ public class ByteArrayTest {
         byteArray.writeAsPs("1234+", 0, 3);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPs1234+", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("01234CBBBBBBBBBBBBBB"));
+        assertEquals("01234CBBBBBBBBBBBBBB", value);
 
         byteArray.writeAsPs("+1234", 0, 3);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPs+1234", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("01234CBBBBBBBBBBBBBB"));
+        assertEquals("01234CBBBBBBBBBBBBBB", value);
 
         byteArray.writeAsPs("1234-", 1, 4);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPs1234-", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("010001234DBBBBBBBBBB"));
+        assertEquals("010001234DBBBBBBBBBB", value);
 
         byteArray.writeAsPs("1234", 0, 3);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPs1234", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("01234F234DBBBBBBBBBB"));
+        assertEquals("01234F234DBBBBBBBBBB", value);
     }
 
     @Test
@@ -583,12 +587,12 @@ public class ByteArrayTest {
         byteArray.writeAsPns("1234A", 0, 3);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPnsStringIntInt1234A", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("A1234ABBBBBBBBBBBBBB"));
+        assertEquals("A1234ABBBBBBBBBBBBBB", value);
 
         byteArray.writeAsPns("  123-42", 0, 5);
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPnsStringIntInt123-42", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("AAAA123D42BBBBBBBBBB"));
+        assertEquals("AAAA123D42BBBBBBBBBB", value);
     }
 
     @Test
@@ -599,42 +603,42 @@ public class ByteArrayTest {
         byteArray.writeAsPns("1234A", 0, 3, '0');
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPnsStringIntIntChar0", byteArray);
         String value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("01234ABBBBBBBBBBBBBB"));
+        assertEquals("01234ABBBBBBBBBBBBBB", value);
 
         byteArray.writeAsPns("  123-42", 0, 5, '0');
         ByteArrayDumpFormatter.dumpByteArray("testWriteAsPnsStringIntIntChar 0", byteArray);
         value = byteArray.readPns(0, 10, false);
-        assertTrue(value.equals("00AA123D42BBBBBBBBBB"));
+        assertEquals("00AA123D42BBBBBBBBBB", value);
     }
 
     @Test
     public void testGetSpaceFiller() {
         byte filler = ByteArray.getSpaceFiller(ByteArray.ASCII_CHARSET_NAME);
-        assertTrue(filler == 0x20);
+        assertEquals(0x20, filler);
         filler = ByteArray.getSpaceFiller(ByteArray.EBCDIC_CHARSET_NAME);
-        assertTrue(filler == 0x40);
+        assertEquals(0x40, filler);
     }
 
     @Test
     public void testStringToByteArray() {
         byteArray = ByteArray.valueOf("  12--TEST  ");
         String s = byteArray.readAsString();
-        assertTrue(s.equals("  12--TEST  "));
+        assertEquals("  12--TEST  ", s);
     }
 
     @Test
     public void testEqualsByteArray() {
         byteArray = ByteArray.valueOf("  12--TEST  ");
-        assertTrue(byteArray.equals(byteArray));
+        assertEquals(byteArray, byteArray);
 
         ByteArray ba = ByteArray.valueOf("  12--TEST  ");
-        assertTrue(byteArray.equals(ba));
+        assertEquals(byteArray, ba);
 
         ba = ByteArray.valueOf("  12--TESTNON");
-        assertFalse(byteArray.equals(ba));
+        assertNotEquals(byteArray, ba);
 
         ba = ByteArray.valueOf("  12--TEST     ");
-        assertFalse(byteArray.equals(ba));
+        assertNotEquals(byteArray, ba);
     }
 
     @Test
@@ -666,7 +670,7 @@ public class ByteArrayTest {
     @Test
     public void testGetLength() {
         byteArray = new ByteArray(10);
-        assertTrue(byteArray.getLength() == 10);
+        assertEquals(10, byteArray.getLength());
     }
 
     @Test
@@ -686,14 +690,10 @@ public class ByteArrayTest {
     private void doGetByteArray(ByteArray byteArray) {
         byteArray.write("TESTTESTTEST", 0);
         byte[] ba = byteArray.getBytes();
-        assertTrue(ba.length == 20);
+        assertEquals(20, ba.length);
         ByteArray ba2 = new ByteArray(ba);
         String s = ba2.readAsString(0, 20, true);
-        assertTrue(s.equals("TESTTESTTEST"));
-    }
-
-    @Test
-    public void testSetEncoding() {
+        assertEquals("TESTTESTTEST", s);
     }
 
 }

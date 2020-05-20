@@ -1,18 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.commons.base.utils;
 
@@ -34,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SwingUtils {
-	private static Logger log = LoggerFactory.getLogger(SwingUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(SwingUtils.class);
 
 	// Specify the look and feel to use by defining the LOOKANDFEEL constant
 	// Valid values are: null (use the default), "Metal", "System", "Motif",
@@ -58,12 +60,7 @@ public class SwingUtils {
 
 	public static int screenResolution() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		// get resolution
-		int resolution = toolkit.getScreenResolution();
-		// Print size
-		// log.debug("Resolution: " + resolution);
-		return resolution;
-
+		return toolkit.getScreenResolution();
 	}
 
 	public static void updateScrollPane(JScrollPane pane, int hDiff, int vDiff) {
@@ -120,7 +117,7 @@ public class SwingUtils {
 	}
 
 	public static void initLookAndFeel() {
-		String lookAndFeel = null;
+		String lookAndFeel;
 
 		if (LOOKANDFEEL != null) {
 			if (LOOKANDFEEL.equals("Metal")) {
@@ -130,41 +127,30 @@ public class SwingUtils {
 				// lookAndFeel = "javax.swing.plaf.metal.MetalLookAndFeel";
 
 			}
-
 			else if (LOOKANDFEEL.equals("System")) {
 				lookAndFeel = UIManager.getSystemLookAndFeelClassName();
 			}
-
 			else if (LOOKANDFEEL.equals("Motif")) {
 				lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
 			}
-
 			else if (LOOKANDFEEL.equals("GTK")) {
 				lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
 			}
-
 			else {
 				log.warn("Unexpected value of LOOKANDFEEL specified: "
 						+ LOOKANDFEEL);
 				lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
 			}
-
 			try {
-
 				UIManager.setLookAndFeel(lookAndFeel);
-
 				// If L&F = "Metal", set the theme
-
 				if (LOOKANDFEEL.equals("Metal")) {
 					if (THEME.equals("DefaultMetal"))
-						MetalLookAndFeel
-								.setCurrentTheme(new DefaultMetalTheme());
+						MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
 					else if (THEME.equals("Ocean"))
 						MetalLookAndFeel.setCurrentTheme(new OceanTheme());
 					else
-						MetalLookAndFeel
-								.setCurrentTheme(new DefaultMetalTheme());
-
+						MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
 					UIManager.setLookAndFeel(new MetalLookAndFeel());
 				}
 				/*
@@ -233,12 +219,11 @@ public class SwingUtils {
 	}
 
 	public static Point centerPoint(int width, int height, JFrame frame) {
-		Point point = null;
+		Point point;
 		Dimension frameSize = frame.getSize();
 		Point framePoint = frame.getLocation();
 		point = new Point(framePoint.x + (frameSize.width / 2) - (width / 2),
 				framePoint.y + (frameSize.height / 2) - (height / 2));
 		return point;
 	}
-
 }

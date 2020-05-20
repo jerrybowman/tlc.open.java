@@ -1,30 +1,24 @@
-/* 
- *  Copyright 2009 The Last Check, LLC, All Rights Reserved
- *
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
  *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  You may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0 
- *
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+ * ****************************************************************************
  */
 
 package com.thelastcheck.commons.buffer;
 
-import java.io.UnsupportedEncodingException;
-
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Jerry Bowman
- * @copyright (c) 2009, The Last Check, All Rights Reserved.
- * @version $Date: 2010/11/15 17:42:05 $ $Revision: 1.4 $
- */
+import java.nio.charset.UnsupportedCharsetException;
 
 public abstract class ByteArrayConverter {
 
@@ -33,11 +27,11 @@ public abstract class ByteArrayConverter {
     protected ByteArrayConverter() {
         try {
             convertToTable = loadConvertTable();
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedCharsetException ignored) {
         }
     }
 
-    protected abstract byte[] loadConvertTable() throws UnsupportedEncodingException;
+    protected abstract byte[] loadConvertTable() throws UnsupportedCharsetException;
 
     protected abstract String outputEncoding();
 

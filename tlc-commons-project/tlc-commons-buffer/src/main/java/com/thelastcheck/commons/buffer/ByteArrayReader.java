@@ -1,17 +1,19 @@
-/* 
- *  Copyright 2009 The Last Check, LLC, All Rights Reserved
- *
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
  *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  You may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0 
- *
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+ * ****************************************************************************
  */
 
 package com.thelastcheck.commons.buffer;
@@ -19,24 +21,12 @@ package com.thelastcheck.commons.buffer;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Jerry Bowman
- * @copyright (c) 2009, The Last Check, All Rights Reserved.
- * @version $Date: 2010/11/15 17:42:05 $ $Revision: 1.4 $
- */
 public class ByteArrayReader extends Reader {
-    private static final String CVS_ID = "$Date: 2010/11/15 17:42:05 $ $Revision: 1.4 $";
-    static {
-        String className = ByteArrayReader.class.getName();
-        LoggerFactory.getLogger("version").info(className + " | " + CVS_ID);
-    }
 
-    private ByteArray           buffer;
-    private int                 limit;
-    private int                 position;
-    private int                 mark;
+    private ByteArray buffer;
+    private final int limit;
+    private int position;
+    private int mark;
 
     /**
      * Create a new Reader that will return data from a ByteArray. This reader
@@ -50,31 +40,21 @@ public class ByteArrayReader extends Reader {
         this.limit = buffer.getLength();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.io.Reader#close()
-     */
     @Override
-    public void close() throws IOException {
+    public void close() {
         buffer = null;
     }
 
     /**
      * Return the total number of bytes read from the ByteArray using the read
      * methods.
-     * 
+     *
      * @return total bytes read
      */
     public int getTotalBytesRead() {
         return position;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.io.Reader#read(char[], int, int)
-     */
     @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
         ensureOpen();
@@ -88,12 +68,10 @@ public class ByteArrayReader extends Reader {
 
     /**
      * Read a single character.
-     * 
+     *
      * @return The character read, or -1 if the end of the stream has been
-     *         reached
-     * 
-     * @exception IOException
-     *                If an I/O error occurs
+     * reached
+     * @throws IOException If an I/O error occurs
      */
     public int read() throws IOException {
         ensureOpen();
@@ -103,7 +81,9 @@ public class ByteArrayReader extends Reader {
         return buffer.readAsChar(position++);
     }
 
-    /** Check to make sure that the stream has not been closed */
+    /**
+     * Check to make sure that the stream has not been closed
+     */
     private void ensureOpen() throws IOException {
         if (buffer == null)
             throw new IOException("Stream closed");
@@ -111,11 +91,9 @@ public class ByteArrayReader extends Reader {
 
     /**
      * Tell whether this stream is ready to be read.
-     * 
+     *
      * @return True if the next read() is guaranteed not to block for input
-     * 
-     * @exception IOException
-     *                If the stream is closed
+     * @throws IOException If the stream is closed
      */
     public boolean ready() throws IOException {
         ensureOpen();
@@ -125,7 +103,7 @@ public class ByteArrayReader extends Reader {
     /**
      * Skips the specified number of characters in the stream. Returns the
      * number of characters that were skipped.
-     * 
+     *
      * <p>
      * The <code>ns</code> parameter may be negative, even though the
      * <code>skip</code> method of the {@link Reader} superclass throws an
@@ -133,13 +111,12 @@ public class ByteArrayReader extends Reader {
      * stream to skip backwards. Negative return values indicate a skip
      * backwards. It is not possible to skip backwards past the beginning of the
      * string.
-     * 
+     *
      * <p>
      * If the entire string has been read or skipped, then this method has no
      * effect and always returns 0.
-     * 
-     * @exception IOException
-     *                If an I/O error occurs
+     *
+     * @throws IOException If an I/O error occurs
      */
     public long skip(long ns) throws IOException {
         ensureOpen();
@@ -162,17 +139,13 @@ public class ByteArrayReader extends Reader {
     /**
      * Mark the present position in the stream. Subsequent calls to reset() will
      * reposition the stream to this point.
-     * 
-     * @param readAheadLimit
-     *            Limit on the number of characters that may be read while still
-     *            preserving the mark. Because the stream's input comes from a
-     *            ByteArray, there is no actual limit, so this argument must not
-     *            be negative, but is otherwise ignored.
-     * 
-     * @exception IllegalArgumentException
-     *                If readAheadLimit is < 0
-     * @exception IOException
-     *                If an I/O error occurs
+     *
+     * @param readAheadLimit Limit on the number of characters that may be read while still
+     *                       preserving the mark. Because the stream's input comes from a
+     *                       ByteArray, there is no actual limit, so this argument must not
+     *                       be negative, but is otherwise ignored.
+     * @throws IllegalArgumentException If readAheadLimit is < 0
+     * @throws IOException              If an I/O error occurs
      */
     public void mark(int readAheadLimit) throws IOException {
         if (readAheadLimit < 0) {
@@ -185,9 +158,8 @@ public class ByteArrayReader extends Reader {
     /**
      * Reset the stream to the most recent mark, or to the beginning of the
      * string if it has never been marked.
-     * 
-     * @exception IOException
-     *                If an I/O error occurs
+     *
+     * @throws IOException If an I/O error occurs
      */
     public void reset() throws IOException {
         ensureOpen();

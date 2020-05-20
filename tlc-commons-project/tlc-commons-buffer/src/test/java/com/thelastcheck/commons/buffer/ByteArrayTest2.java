@@ -1,7 +1,7 @@
 package com.thelastcheck.commons.buffer;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.nio.CharBuffer;
 
@@ -15,7 +15,7 @@ public class ByteArrayTest2 {
 	private ByteArray byteArray;
 
     @Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		byteArray = new ByteArray(256, EBCDIC);
 	}
 
@@ -29,8 +29,8 @@ public class ByteArrayTest2 {
 	
     @Test
 	public void testWrite() {
-		byteArray.write((double) 3.14159, 0);
-		byteArray.write((int) 3, 8);
+		byteArray.write(3.14159, 0);
+		byteArray.write(3, 8);
 		byteArray.write("This is a test", 12, 14, true);
 		byteArray.write("More Test Data", 27, 30, true);
 		ByteArrayDumpFormatter.dumpByteArray("testWrite", byteArray);
@@ -50,18 +50,18 @@ public class ByteArrayTest2 {
 		byteArray2.write("123456", 0);
 		ByteArray byteArray3 = new ByteArray(256);
 		byteArray3.write("123456", 0);
-		assertTrue(byteArray.equals(byteArray));
-		assertTrue(byteArray.equals(byteArray2));
-		assertFalse(byteArray.equals(byteArray3));
+		assertEquals(byteArray, byteArray);
+		assertEquals(byteArray, byteArray2);
+		assertNotEquals(byteArray, byteArray3);
 	}
 
-	private static final String convert = " `1234567890-=~!@#$%^&*()_+qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[]\\{}|;\':\",./<>?";
+	private static final String convert = " `1234567890-=~!@#$%^&*()_+qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[]\\{}|;':\",./<>?";
 
     @Test
 	public void testConvert() {
 		byteArray.write(convert, 0);
 		String result = byteArray.readAsString(0, convert.length());
-		assertTrue(result.equals(convert));
+		assertEquals(result, convert);
 		ByteArrayDumpFormatter.dumpByteArray("testConvert", byteArray);
 	}
 }

@@ -1,23 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009-2015 The Last Check, LLC, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+/*
+ * ****************************************************************************
+ *  Copyright (c) 2009-2020 The Last Check, LLC, All Rights Reserved
+ *  <p/>
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  You may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ * ****************************************************************************
+ */
 
 package com.thelastcheck.commons.base.utils;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -48,7 +49,7 @@ import com.thelastcheck.commons.buffer.ByteArray;
 
 public abstract class ImageUtils {
 
-	private static Logger	log	= LoggerFactory.getLogger(ImageUtils.class);
+	private static final Logger	log	= LoggerFactory.getLogger(ImageUtils.class);
 	/**
 	 * this gets rid of exception for not using native acceleration
 	 */
@@ -58,20 +59,20 @@ public abstract class ImageUtils {
 	}
 
 	public static RenderedImage convertToRenderedImage(byte[] data) throws IOException {
-		RenderedImage im = null;
+		RenderedImage image = null;
 		SeekableStream stream = new ByteArraySeekableStream(data);
 		String[] names = ImageCodec.getDecoderNames(stream);
 		if (names.length > 0) {
 			ImageDecoder dec = ImageCodec.createImageDecoder(names[0], stream, null);
-			im = dec.decodeAsRenderedImage();
+			image = dec.decodeAsRenderedImage();
 		}
 
-		if (im == null) {
+		if (image == null) {
 			ByteArray ba = new ByteArray(data);
-			int len = ba.getLength() < 24 ? ba.getLength() : 24;
+			int len = Math.min(ba.getLength(), 24);
 			log.warn("Unable to find codec for data: " + ba.readPns(0, len));
 		}
-		return im;
+		return image;
 
 		// An alternate way. Need to see if works with tiff images
 		// BufferedImage ioResult = null;
@@ -96,14 +97,12 @@ public abstract class ImageUtils {
 	}
 
 	public static BufferedImage convertToBufferedImage(RenderedImage im) {
-		BufferedImage image = PlanarImage.wrapRenderedImage(im).getAsBufferedImage();
-		return image;
+		return PlanarImage.wrapRenderedImage(im).getAsBufferedImage();
 	}
 
 	public static BufferedImage convertToBufferedImage(byte[] data) throws IOException {
 		RenderedImage im = convertToRenderedImage(data);
-		BufferedImage image = convertToBufferedImage(im);
-		return image;
+		return convertToBufferedImage(im);
 	}
 
 	public static BufferedImage scaleImage(RenderedImageWrapper wrapper, double scale) {
@@ -123,8 +122,7 @@ public abstract class ImageUtils {
 	}
 
 	public static ImageIcon convertToImageIcon(BufferedImage bi) {
-		ImageIcon ii = new ImageIcon(bi);
-		return ii;
+		return new ImageIcon(bi);
 	}
 
 	public static BufferedImage rotateImage(BufferedImage bi, int rotations) {
@@ -145,7 +143,7 @@ public abstract class ImageUtils {
 		AffineTransform af = new AffineTransform();
 		af.concatenate(AffineTransform.getTranslateInstance(moveX, moveY));
 		af.concatenate(AffineTransform.getRotateInstance(rotations * 0.5 * Math.PI));
-		g2d.drawImage((Image) bi, af, null);
+		g2d.drawImage(bi, af, null);
 		return bi;
 	}
 

@@ -10,13 +10,9 @@ import com.thelastcheck.io.x9.factory.X9RecordFactory;
  */
 public class X937Copier implements X937RecordCopier {
 
-    private X9RecordFactory factory;
     private X937RecordCopier[] recordCopiers = new X937RecordCopier[100];
 
-
-
     public X937Copier(X9RecordFactory factory) {
-        this.factory = factory;
         recordCopiers[X9Record.TYPE_FILE_HEADER] = new X937FileHeaderRecordCopier(factory);
         recordCopiers[X9Record.TYPE_CASH_LETTER_HEADER] = new X937CashLetterHeaderRecordCopier(factory);
         recordCopiers[X9Record.TYPE_BUNDLE_HEADER] = new X937BundleHeaderRecordCopier(factory);
