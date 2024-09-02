@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thelastcheck</groupId>
     <artifactId>tlc-open-parent</artifactId>
-    <version>5</version>
+    <version>6</version>
     <packaging>pom</packaging>
     <name>tlc-open-parent</name>
     <description>
@@ -84,7 +84,7 @@
         <maven-war-version>2.4</maven-war-version>
         <versions-maven-version>2.1</versions-maven-version>
         <sonar-maven-version>2.5</sonar-maven-version>
-        <nexus-staging-version>1.6.5</nexus-staging-version>
+        <nexus-staging-version>1.6.7</nexus-staging-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <properties-maven-version>1.0.0</properties-maven-version>
     </properties>
@@ -402,7 +402,7 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>/usr/bin/gpg</executable>
+                                    <executable>/usr/bin/gpg2</executable>
                                     <keyname>${gpg.keyname}</keyname>
                                 </configuration>
                             </execution>
@@ -414,10 +414,8 @@
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
-                                <!-- <phase>verify</phase> -->
                                 <goals>
                                     <goal>jar-no-fork</goal>
-                                    <!-- <goal>test-jar-no-fork</goal> -->
                                 </goals>
                             </execution>
                         </executions>
@@ -428,29 +426,11 @@
                         <version>${maven-javadoc-version}</version>
                         <executions>
                             <execution>
-                                <id>attach-sources</id>
-                                 <!--<phase>verify</phase>-->
+                                <id>attach-javadoc</id>
                                 <goals>
                                     <goal>jar</goal>
-                                    <!--<goal>test-jar</goal>-->
                                 </goals>
                             </execution>
-                            <!--<execution>-->
-                                <!--<id>javadoc-jar</id>-->
-                                <!--<phase>package</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>jar</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                     <!--switch on dependency-driven aggregation-->
-                                    <!--<includeDependencySources>true</includeDependencySources>-->
-<!---->
-                                    <!--<dependencySourceExcludes>-->
-                                        <!-- exclude ONLY commons-cli artifacts -->
-                                        <!--<dependencySourceExclude>commons-cli:*</dependencySourceExclude>-->
-                                    <!--</dependencySourceExcludes>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
                         </executions>
                     </plugin>
                 </plugins>
@@ -460,7 +440,12 @@
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
             </distributionManagement>
+
         </profile>
         <profile>
             <id>use-groovy-compiler</id>
