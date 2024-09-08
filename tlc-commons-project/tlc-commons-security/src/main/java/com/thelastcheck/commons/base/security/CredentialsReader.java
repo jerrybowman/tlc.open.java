@@ -11,29 +11,26 @@
  * ****************************************************************************
  */
 
-package com.thelastcheck.commons.security;
-
-import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
+package com.thelastcheck.commons.base.security;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class CredentialsReader {
 
-    private ByteSource source;
+    private File file;
 
     public CredentialsReader(File file) {
-        this(Files.asByteSource(file));
-    }
-
-    public CredentialsReader(ByteSource source) {
-        this.source = source;
+        this.file = file;
     }
 
     public Credentials read() throws IOException, CredentialsEncryptionException {
-        byte[] ba = source.read();
-        CredentialsEncrypter encrypter = new CredentialsEncrypter();
-        return encrypter.decrypt(ba);
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] ba = new byte[(int) file.length()];
+            fis.read(ba);
+            CredentialsEncrypter encrypter = new CredentialsEncrypter();
+            return encrypter.decrypt(ba);
+        }
     }
 }

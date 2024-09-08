@@ -9,29 +9,25 @@
  * Copyright (c) 2015, The Last Check, LLC, All rights reserved.
  ******************************************************************************/
 
-package com.thelastcheck.commons.security;
-
-import com.google.common.io.ByteSink;
-import com.google.common.io.Files;
+package com.thelastcheck.commons.base.security;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class CredentialsWriter {
 
-    final private ByteSink sink;
+    final private File file;
 
     public CredentialsWriter(File file) {
-        this(Files.asByteSink(file));
-    }
-
-    public CredentialsWriter(ByteSink sink) {
-        this.sink = sink;
+        this.file = file;
     }
 
     public void write(Credentials credentials) throws IOException, CredentialsEncryptionException {
         CredentialsEncrypter encrypter = new CredentialsEncrypter();
         byte[] bytes = encrypter.encrypt(credentials);
-        sink.write(bytes);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(bytes);
+        }
     }
 }
